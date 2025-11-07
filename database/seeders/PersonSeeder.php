@@ -15,7 +15,7 @@ class PersonSeeder extends Seeder
      */
     public function run(): void
     {
-        // Create 50 sample people for testing
-        Person::factory(50)->create();
+        // Create 100 sample people for testing
+        Person::factory(100)->create();
     }
 }
