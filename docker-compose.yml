@@ -26,8 +26,9 @@ services:
       - REDIS_HOST=redis
       - REDIS_PORT=6379
     volumes:
-      - ./storage:/var/www/storage
-      - ./database:/var/www/database
+      - .:/var/www
+      - /var/www/vendor
+      - /var/www/node_modules
     depends_on:
       db:
         condition: service_healthy

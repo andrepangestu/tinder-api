@@ -19,14 +19,17 @@ cd /var/www/tinder-api
 echo -e "${GREEN}📥 Pulling latest changes from GitHub...${NC}"
 git pull origin main
 
-# Rebuild and restart containers
-echo -e "${GREEN}🐳 Rebuilding Docker containers...${NC}"
-docker compose down
-docker compose up -d --build
+# Install/update dependencies
+echo -e "${GREEN}📦 Installing dependencies...${NC}"
+docker compose exec -T app composer install --no-dev --optimize-autoloader --no-interaction
+
+# Restart containers (no rebuild needed since code is mounted)
+echo -e "${GREEN}🐳 Restarting Docker containers...${NC}"
+docker compose restart app
 
 # Wait for containers
-echo -e "${YELLOW}⏳ Waiting for containers to start...${NC}"
-sleep 10
+echo -e "${YELLOW}⏳ Waiting for containers to restart...${NC}"
+sleep 5
 
 # Clear caches
 echo -e "${GREEN}🧹 Clearing application caches...${NC}"
