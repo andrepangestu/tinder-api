@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Tinder API Test</title>
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+                padding: 20px;
+            }
+            .person {
+                border: 1px solid #ddd;
+                padding: 15px;
+                margin: 10px 0;
+                border-radius: 5px;
+            }
+            .btn {
+                padding: 10px 15px;
+                margin: 5px;
+                cursor: pointer;
+                border: none;
+                border-radius: 3px;
+            }
+            .like {
+                background-color: #28a745;
+                color: white;
+            }
+            .dislike {
+                background-color: #dc3545;
+                color: white;
+            }
+            .info {
+                background-color: #17a2b8;
+                color: white;
+            }
+            #result {
+                margin-top: 20px;
+                padding: 10px;
+                background: #f8f9fa;
+                border-radius: 5px;
+            }
+        </style>
+    </head>
+    <body>
+        <h1>Tinder API Test Page</h1>
+
+        <div>
+            <h2>Test Person Actions</h2>
+            <p>
+                Person ID:
+                <input type="number" id="personId" value="1" min="1" />
+            </p>
+
+            <button class="btn info" onclick="getPerson()">
+                Get Person Info
+            </button>
+            <button class="btn like" onclick="likePerson()">Like Person</button>
+            <button class="btn dislike" onclick="dislikePerson()">
+                Dislike Person
+            </button>
+        </div>
+
+        <div id="result">
+            <h3>Result:</h3>
+            <pre id="output">Click a button to test the API...</pre>
+        </div>
+
+        <script>
+            const API_BASE = "http://127.0.0.1:8000/api";
+
+            async function makeRequest(url, method = "GET") {
+                try {
+                    const response = await fetch(url, {
+                        method: method,
+                        headers: {
+                            Accept: "application/json",
+                            "Content-Type": "application/json",
+                        },
+                    });
+
+                    const data = await response.json();
+                    document.getElementById("output").textContent =
+                        JSON.stringify(data, null, 2);
+
+                    return data;
+                } catch (error) {
+                    document.getElementById("output").textContent =
+                        "Error: " + error.message;
+                }
+            }
+
+            async function getPerson() {
+                const personId = document.getElementById("personId").value;
+                await makeRequest(`${API_BASE}/people/${personId}`);
+            }
+
+            async function likePerson() {
+                const personId = document.getElementById("personId").value;
+                await makeRequest(
+                    `${API_BASE}/people/${personId}/like`,
+                    "POST"
+                );
+            }
+
+            async function dislikePerson() {
+                const personId = document.getElementById("personId").value;
+                await makeRequest(
+                    `${API_BASE}/people/${personId}/dislike`,
+                    "POST"
+                );
+            }
+
+            // Load initial person data
+            window.addEventListener("load", function () {
+                getPerson();
+            });
+        </script>
+    </body>
+</html>
