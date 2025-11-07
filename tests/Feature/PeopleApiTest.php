@@ -34,9 +34,9 @@ class PeopleApiTest extends TestCase
                                 'name',
                                 'age',
                                 'location',
-                                'bio',
                                 'image_url',
-                                'interests',
+                                'likes_count',
+                                'dislikes_count',
                                 'created_at',
                                 'updated_at'
                             ]
@@ -115,9 +115,9 @@ class PeopleApiTest extends TestCase
                         'name',
                         'age',
                         'location',
-                        'bio',
                         'image_url',
-                        'interests',
+                        'likes_count',
+                        'dislikes_count',
                         'created_at',
                         'updated_at'
                     ]

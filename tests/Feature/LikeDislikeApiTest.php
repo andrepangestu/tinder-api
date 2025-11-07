@@ -44,10 +44,10 @@ class LikeDislikeApiTest extends TestCase
         $this->assertEquals($person->id, $responseData['data']['person_id']);
         $this->assertEquals($initialLikes + 1, $responseData['data']['likes_count']);
 
-        // Verify in database
-        $this->assertDatabaseHas('people', [
-            'id' => $person->id,
-            'likes_count' => $initialLikes + 1
+        // Verify activity was created in database
+        $this->assertDatabaseHas('person_activities', [
+            'person_id' => $person->id,
+            'action_type' => 'like'
         ]);
     }
 
@@ -76,10 +76,10 @@ class LikeDislikeApiTest extends TestCase
         $this->assertEquals($person->id, $responseData['data']['person_id']);
         $this->assertEquals($initialDislikes + 1, $responseData['data']['dislikes_count']);
 
-        // Verify in database
-        $this->assertDatabaseHas('people', [
-            'id' => $person->id,
-            'dislikes_count' => $initialDislikes + 1
+        // Verify activity was created in database
+        $this->assertDatabaseHas('person_activities', [
+            'person_id' => $person->id,
+            'action_type' => 'dislike'
         ]);
     }
 
@@ -95,11 +95,11 @@ class LikeDislikeApiTest extends TestCase
         $responseData = $response->json();
         $this->assertEquals(3, $responseData['data']['likes_count']);
 
-        // Verify in database
-        $this->assertDatabaseHas('people', [
-            'id' => $person->id,
-            'likes_count' => 3
-        ]);
+        // Verify 3 like activities were created in database
+        $this->assertDatabaseCount('person_activities', 3);
+        $this->assertEquals(3, \App\Models\PersonActivity::where('person_id', $person->id)
+            ->where('action_type', 'like')
+            ->count());
     }
 
     public function test_can_dislike_multiple_times()
@@ -114,11 +114,11 @@ class LikeDislikeApiTest extends TestCase
         $responseData = $response->json();
         $this->assertEquals(3, $responseData['data']['dislikes_count']);
 
-        // Verify in database
-        $this->assertDatabaseHas('people', [
-            'id' => $person->id,
-            'dislikes_count' => 3
-        ]);
+        // Verify 3 dislike activities were created in database
+        $this->assertDatabaseCount('person_activities', 3);
+        $this->assertEquals(3, \App\Models\PersonActivity::where('person_id', $person->id)
+            ->where('action_type', 'dislike')
+            ->count());
     }
 
     public function test_like_returns_404_for_non_existent_person()
@@ -162,10 +162,10 @@ class LikeDislikeApiTest extends TestCase
     {
         $person = Person::first();
         
-        // Add some likes and dislikes
-        $person->incrementLikes();
-        $person->incrementLikes();
-        $person->incrementDislikes();
+        // Add some likes and dislikes via API
+        $this->postJson("/api/people/{$person->id}/like");
+        $this->postJson("/api/people/{$person->id}/like");
+        $this->postJson("/api/people/{$person->id}/dislike");
 
         $response = $this->getJson('/api/people/recommended');
 
