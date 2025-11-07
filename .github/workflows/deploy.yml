@@ -112,8 +112,16 @@ jobs:
             docker-compose build --no-cache
             docker-compose up -d
             
-            # Wait for containers to be ready
-            sleep 10
+            # Wait for MySQL to be ready
+            echo "Waiting for MySQL to be ready..."
+            until docker-compose exec -T db mysqladmin ping -h localhost -u root -p${{ secrets.DB_ROOT_PASSWORD }} --silent 2>/dev/null; do
+              echo "MySQL is unavailable - sleeping"
+              sleep 2
+            done
+            echo "MySQL is ready!"
+            
+            # Additional wait to ensure MySQL is fully initialized
+            sleep 5
             
             # Run migrations
             docker-compose exec -T app php artisan migrate --force
