@@ -9,10 +9,41 @@ use Illuminate\Http\JsonResponse;
 class PersonController extends Controller
 {
     /**
-     * Display a paginated list of recommended people.
-     *
-     * @param Request $request
-     * @return JsonResponse
+     * @OA\Get(
+     *     path="/people/recommended",
+     *     summary="Get recommended people",
+     *     description="Get a paginated list of recommended people based on likes ratio",
+     *     operationId="getRecommendedPeople",
+     *     tags={"People"},
+     *     @OA\Parameter(
+     *         name="per_page",
+     *         in="query",
+     *         description="Number of items per page (max 50)",
+     *         required=false,
+     *         @OA\Schema(type="integer", default=10, maximum=50)
+     *     ),
+     *     @OA\Parameter(
+     *         name="page",
+     *         in="query",
+     *         description="Page number",
+     *         required=false,
+     *         @OA\Schema(type="integer", default=1)
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Successful operation",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="success"),
+     *             @OA\Property(property="message", type="string", example="Recommended people retrieved successfully"),
+     *             @OA\Property(
+     *                 property="data",
+     *                 type="object",
+     *                 @OA\Property(property="people", type="array", @OA\Items(ref="#/components/schemas/Person")),
+     *                 @OA\Property(property="pagination", ref="#/components/schemas/Pagination")
+     *             )
+     *         )
+     *     )
+     * )
      */
     public function recommended(Request $request): JsonResponse
     {
@@ -43,10 +74,41 @@ class PersonController extends Controller
     }
 
     /**
-     * Display a listing of all people.
-     *
-     * @param Request $request
-     * @return JsonResponse
+     * @OA\Get(
+     *     path="/people",
+     *     summary="Get all people",
+     *     description="Get a paginated list of all people",
+     *     operationId="getAllPeople",
+     *     tags={"People"},
+     *     @OA\Parameter(
+     *         name="per_page",
+     *         in="query",
+     *         description="Number of items per page (max 50)",
+     *         required=false,
+     *         @OA\Schema(type="integer", default=10, maximum=50)
+     *     ),
+     *     @OA\Parameter(
+     *         name="page",
+     *         in="query",
+     *         description="Page number",
+     *         required=false,
+     *         @OA\Schema(type="integer", default=1)
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Successful operation",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="success"),
+     *             @OA\Property(property="message", type="string", example="People retrieved successfully"),
+     *             @OA\Property(
+     *                 property="data",
+     *                 type="object",
+     *                 @OA\Property(property="people", type="array", @OA\Items(ref="#/components/schemas/Person")),
+     *                 @OA\Property(property="pagination", ref="#/components/schemas/Pagination")
+     *             )
+     *         )
+     *     )
+     * )
      */
     public function index(Request $request): JsonResponse
     {
@@ -76,10 +138,37 @@ class PersonController extends Controller
     }
 
     /**
-     * Display the specified person.
-     *
-     * @param int $id
-     * @return JsonResponse
+     * @OA\Get(
+     *     path="/people/{id}",
+     *     summary="Get a specific person",
+     *     description="Get details of a specific person by ID",
+     *     operationId="getPersonById",
+     *     tags={"People"},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         description="Person ID",
+     *         required=true,
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Successful operation",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="success"),
+     *             @OA\Property(property="message", type="string", example="Person retrieved successfully"),
+     *             @OA\Property(property="data", ref="#/components/schemas/Person")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Person not found",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="error"),
+     *             @OA\Property(property="message", type="string", example="Person not found")
+     *         )
+     *     )
+     * )
      */
     public function show(int $id): JsonResponse
     {
@@ -100,10 +189,44 @@ class PersonController extends Controller
     }
 
     /**
-     * Like a person
-     *
-     * @param int $id
-     * @return JsonResponse
+     * @OA\Post(
+     *     path="/people/{id}/like",
+     *     summary="Like a person",
+     *     description="Increment the like count for a specific person",
+     *     operationId="likePerson",
+     *     tags={"People"},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         description="Person ID",
+     *         required=true,
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Successful operation",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="success"),
+     *             @OA\Property(property="message", type="string", example="Person liked successfully"),
+     *             @OA\Property(
+     *                 property="data",
+     *                 type="object",
+     *                 @OA\Property(property="person_id", type="integer"),
+     *                 @OA\Property(property="name", type="string"),
+     *                 @OA\Property(property="likes_count", type="integer"),
+     *                 @OA\Property(property="dislikes_count", type="integer")
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Person not found",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="error"),
+     *             @OA\Property(property="message", type="string", example="Person not found")
+     *         )
+     *     )
+     * )
      */
     public function like(int $id): JsonResponse
     {
@@ -131,10 +254,44 @@ class PersonController extends Controller
     }
 
     /**
-     * Dislike a person
-     *
-     * @param int $id
-     * @return JsonResponse
+     * @OA\Post(
+     *     path="/people/{id}/dislike",
+     *     summary="Dislike a person",
+     *     description="Increment the dislike count for a specific person",
+     *     operationId="dislikePerson",
+     *     tags={"People"},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         description="Person ID",
+     *         required=true,
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Successful operation",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="success"),
+     *             @OA\Property(property="message", type="string", example="Person disliked successfully"),
+     *             @OA\Property(
+     *                 property="data",
+     *                 type="object",
+     *                 @OA\Property(property="person_id", type="integer"),
+     *                 @OA\Property(property="name", type="string"),
+     *                 @OA\Property(property="likes_count", type="integer"),
+     *                 @OA\Property(property="dislikes_count", type="integer")
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Person not found",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="error"),
+     *             @OA\Property(property="message", type="string", example="Person not found")
+     *         )
+     *     )
+     * )
      */
     public function dislike(int $id): JsonResponse
     {

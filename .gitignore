@@ -22,3 +22,17 @@
 Homestead.json
 Homestead.yaml
 Thumbs.db
+
+# Docker
+docker-compose.override.yml
+
+# SSH Keys
+*.pem
+*.key
+!*.key.example
+github-actions-key
+github-actions-key.pub
+
+# Deployment
+deploy-setup.sh.local
+.deployment

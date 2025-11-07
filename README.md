@@ -1,52 +1,249 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# 💘 Tinder API - Laravel Dating Application
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+A modern, RESTful API built with Laravel for a Tinder-like dating application. Features include people recommendations, like/dislike functionality, and guest authentication.
 
-## About Laravel
+[![Laravel](https://img.shields.io/badge/Laravel-12.x-red.svg)](https://laravel.com)
+[![PHP](https://img.shields.io/badge/PHP-8.2-blue.svg)](https://php.net)
+[![Docker](https://img.shields.io/badge/Docker-Ready-blue.svg)](https://docker.com)
+[![Swagger](https://img.shields.io/badge/API-Documented-green.svg)](https://andrepangestu.com/api/documentation)
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## 🚀 Live Demo
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+- **API Base URL**: [https://andrepangestu.com/api](https://andrepangestu.com/api)
+- **Swagger Documentation**: [https://andrepangestu.com/api/documentation](https://andrepangestu.com/api/documentation)
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## ✨ Features
 
-## Learning Laravel
+- 🎯 **People Recommendations** - Smart algorithm based on like ratio
+- 👍 **Like/Dislike System** - Swipe-like functionality
+- 👤 **Guest Authentication** - No signup required to start
+- 📖 **Swagger Documentation** - Interactive API documentation
+- 🐳 **Docker Support** - Containerized deployment
+- 🚀 **CI/CD Pipeline** - Automated deployment with GitHub Actions
+- 🔒 **SSL Enabled** - Secure HTTPS connections
+- ✅ **Full Test Coverage** - Comprehensive test suite
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+## 📋 Table of Contents
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+- [Quick Start](#-quick-start)
+- [API Endpoints](#-api-endpoints)
+- [Deployment](#-deployment)
+- [Documentation](#-documentation)
+- [Testing](#-testing)
+- [Tech Stack](#-tech-stack)
+- [Contributing](#-contributing)
 
-## Laravel Sponsors
+## 🏃 Quick Start
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+### Local Development
 
-### Premium Partners
+```bash
+# Clone the repository
+git clone https://github.com/YOUR_USERNAME/tinder-api.git
+cd tinder-api
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+# Install dependencies
+composer install
+npm install
 
-## Contributing
+# Setup environment
+cp .env.example .env
+php artisan key:generate
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+# Create database
+touch database/database.sqlite
 
-## Code of Conduct
+# Run migrations and seed
+php artisan migrate --seed
+
+# Start development server
+php artisan serve
+
+# Visit Swagger docs
+open http://localhost:8000/api/documentation
+```
+
+### Docker Development
+
+```bash
+# Build and start containers
+docker compose up -d
+
+# Run migrations
+docker compose exec app php artisan migrate --seed
+
+# Generate Swagger docs
+docker compose exec app php artisan l5-swagger:generate
+
+# Visit API
+open http://localhost:8080/api/test
+```
+
+## 🌐 API Endpoints
+
+### Authentication
+```bash
+POST   /api/auth/guest          # Register as guest user
+```
+
+### People
+```bash
+GET    /api/people/recommended  # Get recommended people (sorted by like ratio)
+GET    /api/people              # Get all people (paginated)
+GET    /api/people/{id}         # Get specific person
+POST   /api/people/{id}/like    # Like a person
+POST   /api/people/{id}/dislike # Dislike a person
+```
+
+### Example Usage
+
+```bash
+# Register as guest
+curl -X POST https://andrepangestu.com/api/auth/guest \
+  -H "Accept: application/json"
+
+# Get recommended people
+curl https://andrepangestu.com/api/people/recommended?per_page=10
+
+# Like someone
+curl -X POST https://andrepangestu.com/api/people/1/like \
+  -H "Accept: application/json"
+```
+
+## 🚀 Deployment
+
+### Prerequisites
+- DigitalOcean droplet (Ubuntu 22.04 LTS)
+- Domain pointing to your server
+- GitHub repository
+
+### Quick Deploy
+
+Follow the comprehensive setup checklist:
+
+1. **[SETUP_CHECKLIST.md](SETUP_CHECKLIST.md)** - Step-by-step deployment guide
+2. **[DEPLOYMENT_GUIDE.md](DEPLOYMENT_GUIDE.md)** - Detailed server configuration
+3. **[GITHUB_ACTIONS_SETUP.md](GITHUB_ACTIONS_SETUP.md)** - CI/CD pipeline setup
+
+### One-Command Setup
+
+```bash
+curl -o setup.sh https://raw.githubusercontent.com/YOUR_USERNAME/tinder-api/main/deploy-setup.sh
+chmod +x setup.sh
+./setup.sh
+```
+
+## 📚 Documentation
+
+- **[API_DOCUMENTATION.md](API_DOCUMENTATION.md)** - Complete API reference
+- **[SWAGGER_SETUP.md](SWAGGER_SETUP.md)** - Swagger configuration guide
+- **[TESTING_GUIDE.md](TESTING_GUIDE.md)** - Testing documentation
+- **[Swagger UI](https://andrepangestu.com/api/documentation)** - Interactive API docs
+
+## ✅ Testing
+
+```bash
+# Run all tests
+php artisan test
+
+# Run specific test suite
+php artisan test --testsuite=Feature
+
+# Run with coverage
+php artisan test --coverage
+
+# In Docker
+docker compose exec app php artisan test
+```
+
+## 🛠 Tech Stack
+
+- **Framework**: Laravel 12.x
+- **Language**: PHP 8.2
+- **Database**: MySQL 8.0 / SQLite (dev)
+- **Cache/Queue**: Redis
+- **Web Server**: Nginx
+- **Container**: Docker & Docker Compose
+- **CI/CD**: GitHub Actions
+- **API Docs**: L5-Swagger (OpenAPI 3.0)
+- **Testing**: PHPUnit
+- **Code Style**: Laravel Pint
+
+## 📁 Project Structure
+
+```
+tinder-api/
+├── app/
+│   ├── Http/Controllers/      # API Controllers
+│   └── Models/                 # Eloquent Models
+├── database/
+│   ├── factories/              # Model Factories
+│   ├── migrations/             # Database Migrations
+│   └── seeders/                # Database Seeders
+├── docker/                     # Docker configurations
+│   ├── nginx/                  # Nginx configs
+│   ├── php/                    # PHP-FPM configs
+│   └── supervisor/             # Supervisor configs
+├── routes/
+│   └── api.php                 # API Routes
+├── tests/                      # Test Suite
+├── .github/workflows/          # GitHub Actions
+├── docker-compose.yml          # Docker Compose config
+├── Dockerfile                  # Docker image definition
+└── Documentation files
+```
+
+## 🔐 Environment Variables
+
+Key environment variables for production:
+
+```env
+APP_ENV=production
+APP_DEBUG=false
+APP_URL=https://andrepangestu.com
+
+DB_CONNECTION=mysql
+DB_HOST=db
+DB_DATABASE=tinder_api
+DB_USERNAME=tinder_user
+DB_PASSWORD=your_secure_password
+
+CACHE_DRIVER=redis
+SESSION_DRIVER=redis
+QUEUE_CONNECTION=redis
+```
+
+## 🤝 Contributing
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add some amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+## 📝 License
+
+This project is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+
+## 👨‍💻 Author
+
+**Andre Pangestu**
+- Website: [andrepangestu.com](https://andrepangestu.com)
+- Email: hello@andrepangestu.com
+
+## 🙏 Acknowledgments
+
+- Laravel Framework
+- L5-Swagger for API documentation
+- DigitalOcean for hosting
+- GitHub Actions for CI/CD
+
+---
+
+**Made with ❤️ using Laravel**
+
 
 In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
 
