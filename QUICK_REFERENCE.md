@@ -2,32 +2,32 @@
 
 ## 📍 Server Information
 
-- **Domain**: https://andrepangestu.com
-- **IP Address**: 206.189.84.142
-- **Server**: DigitalOcean Ubuntu 22.04 LTS
-- **Application Path**: /var/www/tinder-api
+-   **Domain**: https://andrepangestu.com
+-   **IP Address**: 206.189.84.142
+-   **Server**: DigitalOcean Ubuntu 22.04 LTS
+-   **Application Path**: /var/www/tinder-api
 
 ## 🌐 Important URLs
 
-| Resource | URL |
-|----------|-----|
-| API Base | https://andrepangestu.com/api |
-| Swagger Docs | https://andrepangestu.com/api/documentation |
-| Test Endpoint | https://andrepangestu.com/api/test |
-| GitHub Repo | https://github.com/YOUR_USERNAME/tinder-api |
+| Resource      | URL                                         |
+| ------------- | ------------------------------------------- |
+| API Base      | https://andrepangestu.com/api               |
+| Swagger Docs  | https://andrepangestu.com/api/documentation |
+| Test Endpoint | https://andrepangestu.com/api/test          |
+| GitHub Repo   | https://github.com/YOUR_USERNAME/tinder-api |
 
 ## 🔑 GitHub Secrets Required
 
-| Secret Name | Description |
-|-------------|-------------|
-| SSH_PRIVATE_KEY | Private SSH key for deployment |
-| SERVER_HOST | 206.189.84.142 |
-| SERVER_USER | root |
-| APP_KEY | Laravel application key |
-| DB_DATABASE | tinder_api |
-| DB_USERNAME | tinder_user |
-| DB_PASSWORD | Your database password |
-| DB_ROOT_PASSWORD | MySQL root password |
+| Secret Name      | Description                    |
+| ---------------- | ------------------------------ |
+| SSH_PRIVATE_KEY  | Private SSH key for deployment |
+| SERVER_HOST      | 206.189.84.142                 |
+| SERVER_USER      | root                           |
+| APP_KEY          | Laravel application key        |
+| DB_DATABASE      | tinder_api                     |
+| DB_USERNAME      | tinder_user                    |
+| DB_PASSWORD      | Your database password         |
+| DB_ROOT_PASSWORD | MySQL root password            |
 
 ## 📦 Docker Commands
 
@@ -108,6 +108,7 @@ docker compose exec app php artisan test
 ## 🔄 Deployment Workflow
 
 ### Automatic (GitHub Actions)
+
 ```bash
 git add .
 git commit -m "Your changes"
@@ -116,6 +117,7 @@ git push origin main
 ```
 
 ### Manual
+
 ```bash
 ssh root@206.189.84.142
 cd /var/www/tinder-api
@@ -186,6 +188,7 @@ EXIT;
 ## 🐛 Troubleshooting
 
 ### Container won't start
+
 ```bash
 docker compose logs app
 docker compose down
@@ -193,12 +196,14 @@ docker compose up -d
 ```
 
 ### Permission errors
+
 ```bash
 docker compose exec app chown -R www-data:www-data /var/www/storage
 docker compose exec app chmod -R 755 /var/www/storage
 ```
 
 ### Database connection failed
+
 ```bash
 docker compose ps                    # Check if DB is running
 docker compose logs db              # Check DB logs
@@ -206,6 +211,7 @@ docker compose exec app env | grep DB_  # Check env vars
 ```
 
 ### Swagger not loading
+
 ```bash
 docker compose exec app php artisan l5-swagger:generate
 docker compose exec app php artisan cache:clear
@@ -213,6 +219,7 @@ docker compose restart app
 ```
 
 ### 502 Bad Gateway
+
 ```bash
 docker compose ps                    # Check if app is running
 docker compose logs -f app          # Check app logs
@@ -240,14 +247,14 @@ curl -X POST https://andrepangestu.com/api/people/1/like \
 
 ## 📚 Documentation Files
 
-| File | Purpose |
-|------|---------|
-| SETUP_CHECKLIST.md | Step-by-step setup guide |
-| DEPLOYMENT_GUIDE.md | Complete deployment instructions |
-| GITHUB_ACTIONS_SETUP.md | CI/CD configuration |
-| SWAGGER_SETUP.md | API documentation setup |
-| API_DOCUMENTATION.md | API endpoint reference |
-| TESTING_GUIDE.md | Testing documentation |
+| File                    | Purpose                          |
+| ----------------------- | -------------------------------- |
+| SETUP_CHECKLIST.md      | Step-by-step setup guide         |
+| DEPLOYMENT_GUIDE.md     | Complete deployment instructions |
+| GITHUB_ACTIONS_SETUP.md | CI/CD configuration              |
+| SWAGGER_SETUP.md        | API documentation setup          |
+| API_DOCUMENTATION.md    | API endpoint reference           |
+| TESTING_GUIDE.md        | Testing documentation            |
 
 ## 🎯 Success Indicators
 

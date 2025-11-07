@@ -4,10 +4,10 @@ This guide will walk you through deploying your Laravel Tinder API to DigitalOce
 
 ## Prerequisites
 
-- GitHub account with your repository
-- DigitalOcean account with a droplet (Ubuntu 22.04 LTS recommended)
-- Domain: `andrepangestu.com` pointing to `206.189.84.142`
-- SSH access to your droplet
+-   GitHub account with your repository
+-   DigitalOcean account with a droplet (Ubuntu 22.04 LTS recommended)
+-   Domain: `andrepangestu.com` pointing to `206.189.84.142`
+-   SSH access to your droplet
 
 ## Part 1: Server Setup (DigitalOcean Droplet)
 
@@ -120,6 +120,7 @@ cat ~/.ssh/id_ed25519.pub
 ```
 
 Copy the SSH public key and add it to your GitHub repository:
+
 1. Go to GitHub → Your Repository → Settings → Deploy keys
 2. Click "Add deploy key"
 3. Paste the key and check "Allow write access"
@@ -139,6 +140,7 @@ nano .env
 ```
 
 Update these values:
+
 ```env
 APP_KEY=base64:YOUR_GENERATED_KEY_HERE
 DB_DATABASE=tinder_api
@@ -148,6 +150,7 @@ DB_ROOT_PASSWORD=YOUR_SECURE_ROOT_PASSWORD_HERE
 ```
 
 Generate APP_KEY locally and copy it:
+
 ```bash
 php artisan key:generate --show
 ```
@@ -202,16 +205,16 @@ Go to your GitHub repository → Settings → Secrets and variables → Actions 
 
 Add these secrets:
 
-| Secret Name | Value |
-|-------------|-------|
-| `SSH_PRIVATE_KEY` | Content of `github-actions-key` (private key) |
-| `SERVER_HOST` | `206.189.84.142` |
-| `SERVER_USER` | `root` |
-| `APP_KEY` | Your generated Laravel APP_KEY |
-| `DB_DATABASE` | `tinder_api` |
-| `DB_USERNAME` | `tinder_user` |
-| `DB_PASSWORD` | Your database password |
-| `DB_ROOT_PASSWORD` | Your root password |
+| Secret Name        | Value                                         |
+| ------------------ | --------------------------------------------- |
+| `SSH_PRIVATE_KEY`  | Content of `github-actions-key` (private key) |
+| `SERVER_HOST`      | `206.189.84.142`                              |
+| `SERVER_USER`      | `root`                                        |
+| `APP_KEY`          | Your generated Laravel APP_KEY                |
+| `DB_DATABASE`      | `tinder_api`                                  |
+| `DB_USERNAME`      | `tinder_user`                                 |
+| `DB_PASSWORD`      | Your database password                        |
+| `DB_ROOT_PASSWORD` | Your root password                            |
 
 ### 2.4 Commit and Push
 
@@ -227,8 +230,8 @@ The GitHub Action will automatically trigger and deploy your application!
 
 ### 3.1 API Endpoints
 
-- **Base URL**: `https://andrepangestu.com/api`
-- **Swagger Documentation**: `https://andrepangestu.com/api/documentation`
+-   **Base URL**: `https://andrepangestu.com/api`
+-   **Swagger Documentation**: `https://andrepangestu.com/api/documentation`
 
 ### 3.2 Test Endpoints
 
@@ -354,6 +357,7 @@ docker compose up -d
 ### Issue: Database connection failed
 
 Check database container:
+
 ```bash
 docker compose ps
 docker compose logs db
@@ -362,6 +366,7 @@ docker compose logs db
 ### Issue: Permission denied
 
 Fix permissions:
+
 ```bash
 docker compose exec app chown -R www-data:www-data /var/www/storage
 docker compose exec app chmod -R 755 /var/www/storage
@@ -370,6 +375,7 @@ docker compose exec app chmod -R 755 /var/www/storage
 ### Issue: Swagger not loading
 
 Regenerate documentation:
+
 ```bash
 docker compose exec app php artisan l5-swagger:generate
 docker compose exec app php artisan cache:clear
@@ -378,9 +384,10 @@ docker compose exec app php artisan cache:clear
 ## Support
 
 For issues, check:
-- Application logs: `docker compose logs -f app`
-- Nginx logs: `tail -f /var/log/nginx/error.log`
-- System logs: `journalctl -xe`
+
+-   Application logs: `docker compose logs -f app`
+-   Nginx logs: `tail -f /var/log/nginx/error.log`
+-   System logs: `journalctl -xe`
 
 ---
 

@@ -7,11 +7,13 @@ This project uses L5-Swagger (OpenAPI 3.0) to automatically generate interactive
 ## Accessing Swagger Documentation
 
 ### Local Development
+
 ```
 http://localhost:8000/api/documentation
 ```
 
 ### Production
+
 ```
 https://andrepangestu.com/api/documentation
 ```
@@ -33,12 +35,15 @@ php artisan vendor:publish --provider="L5Swagger\L5SwaggerServiceProvider"
 ## Generating Documentation
 
 ### Manually Generate
+
 ```bash
 php artisan l5-swagger:generate
 ```
 
 ### Auto-generate on Each Request (Development Only)
+
 Set in `.env`:
+
 ```env
 L5_SWAGGER_GENERATE_ALWAYS=true
 ```
@@ -58,6 +63,7 @@ ls -la storage/api-docs/
 ## Annotation Examples
 
 ### Basic Controller Annotation
+
 ```php
 /**
  * @OA\Get(
@@ -76,6 +82,7 @@ public function method() {}
 ```
 
 ### With Request Body
+
 ```php
 /**
  * @OA\Post(
@@ -96,6 +103,7 @@ public function method() {}
 ```
 
 ### With Authentication
+
 ```php
 /**
  * @OA\Get(
@@ -111,39 +119,43 @@ public function method() {}
 
 Edit `config/l5-swagger.php` to customize:
 
-- API title and description
-- Server URLs
-- Security schemes
-- UI settings
+-   API title and description
+-   Server URLs
+-   Security schemes
+-   UI settings
 
 ## Current API Structure
 
 ### Tags
-- **Authentication** - Guest user registration and token generation
-- **People** - CRUD operations for people profiles
+
+-   **Authentication** - Guest user registration and token generation
+-   **People** - CRUD operations for people profiles
 
 ### Endpoints
 
 #### Authentication
-- `POST /api/auth/guest` - Register as guest user
+
+-   `POST /api/auth/guest` - Register as guest user
 
 #### People
-- `GET /api/people/recommended` - Get recommended people
-- `GET /api/people` - Get all people
-- `GET /api/people/{id}` - Get specific person
-- `POST /api/people/{id}/like` - Like a person
-- `POST /api/people/{id}/dislike` - Dislike a person
+
+-   `GET /api/people/recommended` - Get recommended people
+-   `GET /api/people` - Get all people
+-   `GET /api/people/{id}` - Get specific person
+-   `POST /api/people/{id}/like` - Like a person
+-   `POST /api/people/{id}/dislike` - Dislike a person
 
 ## Swagger UI Features
 
-- **Try it out** - Test endpoints directly from the documentation
-- **Authorization** - Add bearer token for protected endpoints
-- **Request/Response Examples** - See example payloads
-- **Schema Definitions** - View data models
+-   **Try it out** - Test endpoints directly from the documentation
+-   **Authorization** - Add bearer token for protected endpoints
+-   **Request/Response Examples** - See example payloads
+-   **Schema Definitions** - View data models
 
 ## Troubleshooting
 
 ### Documentation not showing
+
 ```bash
 # Clear caches
 php artisan config:clear
@@ -154,6 +166,7 @@ php artisan l5-swagger:generate
 ```
 
 ### In Docker
+
 ```bash
 docker compose exec app php artisan config:clear
 docker compose exec app php artisan l5-swagger:generate
@@ -161,6 +174,7 @@ docker compose restart app
 ```
 
 ### Permission Issues
+
 ```bash
 docker compose exec app chown -R www-data:www-data storage/api-docs
 docker compose exec app chmod -R 755 storage/api-docs
@@ -176,9 +190,9 @@ docker compose exec app chmod -R 755 storage/api-docs
 
 ## Resources
 
-- [L5-Swagger Documentation](https://github.com/DarkaOnLine/L5-Swagger)
-- [OpenAPI Specification](https://swagger.io/specification/)
-- [Swagger Editor](https://editor.swagger.io/)
+-   [L5-Swagger Documentation](https://github.com/DarkaOnLine/L5-Swagger)
+-   [OpenAPI Specification](https://swagger.io/specification/)
+-   [Swagger Editor](https://editor.swagger.io/)
 
 ---
 

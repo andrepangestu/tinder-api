@@ -3,36 +3,40 @@
 ## ✅ What Has Been Set Up
 
 ### 1. **Docker Configuration** ✅
-- ✅ `Dockerfile` - Multi-stage build for production
-- ✅ `docker-compose.yml` - Full stack orchestration
-- ✅ Nginx configuration for web server
-- ✅ PHP-FPM configuration
-- ✅ Supervisor for process management
-- ✅ MySQL 8.0 database container
-- ✅ Redis for caching and queues
+
+-   ✅ `Dockerfile` - Multi-stage build for production
+-   ✅ `docker-compose.yml` - Full stack orchestration
+-   ✅ Nginx configuration for web server
+-   ✅ PHP-FPM configuration
+-   ✅ Supervisor for process management
+-   ✅ MySQL 8.0 database container
+-   ✅ Redis for caching and queues
 
 ### 2. **CI/CD Pipeline** ✅
-- ✅ `.github/workflows/deploy.yml` - Automated deployment
-- ✅ Automatic testing on push
-- ✅ Automated Docker build
-- ✅ Database migrations on deploy
-- ✅ Cache optimization
+
+-   ✅ `.github/workflows/deploy.yml` - Automated deployment
+-   ✅ Automatic testing on push
+-   ✅ Automated Docker build
+-   ✅ Database migrations on deploy
+-   ✅ Cache optimization
 
 ### 3. **API Documentation** ✅
-- ✅ Swagger/OpenAPI 3.0 integration
-- ✅ L5-Swagger package installed
-- ✅ All endpoints documented with annotations
-- ✅ Interactive API documentation UI
-- ✅ Request/Response examples
+
+-   ✅ Swagger/OpenAPI 3.0 integration
+-   ✅ L5-Swagger package installed
+-   ✅ All endpoints documented with annotations
+-   ✅ Interactive API documentation UI
+-   ✅ Request/Response examples
 
 ### 4. **Documentation** ✅
-- ✅ `DEPLOYMENT_GUIDE.md` - Complete deployment instructions
-- ✅ `GITHUB_ACTIONS_SETUP.md` - CI/CD setup guide
-- ✅ `SWAGGER_SETUP.md` - API documentation guide
-- ✅ `SETUP_CHECKLIST.md` - Step-by-step checklist
-- ✅ `QUICK_REFERENCE.md` - Command reference
-- ✅ Updated `README.md` - Project overview
-- ✅ `deploy-setup.sh` - Automated setup script
+
+-   ✅ `DEPLOYMENT_GUIDE.md` - Complete deployment instructions
+-   ✅ `GITHUB_ACTIONS_SETUP.md` - CI/CD setup guide
+-   ✅ `SWAGGER_SETUP.md` - API documentation guide
+-   ✅ `SETUP_CHECKLIST.md` - Step-by-step checklist
+-   ✅ `QUICK_REFERENCE.md` - Command reference
+-   ✅ Updated `README.md` - Project overview
+-   ✅ `deploy-setup.sh` - Automated setup script
 
 ## 🚀 Next Steps
 
@@ -52,6 +56,7 @@ git push origin main
 ### **STEP 2: Set Up Your Server**
 
 Option A: **Automated Setup** (Recommended)
+
 ```bash
 # SSH into your server
 ssh root@206.189.84.142
@@ -78,21 +83,22 @@ Follow the complete guide in `DEPLOYMENT_GUIDE.md`
 ### **STEP 4: Verify Deployment**
 
 Check these URLs:
-- ✅ https://andrepangestu.com/api/test
-- ✅ https://andrepangestu.com/api/documentation
-- ✅ https://andrepangestu.com/api/people/recommended
+
+-   ✅ https://andrepangestu.com/api/test
+-   ✅ https://andrepangestu.com/api/documentation
+-   ✅ https://andrepangestu.com/api/people/recommended
 
 ## 📚 Documentation Reference
 
-| Document | Purpose |
-|----------|---------|
-| **SETUP_CHECKLIST.md** | ⭐ Start here - Complete setup checklist |
-| **DEPLOYMENT_GUIDE.md** | Full server deployment instructions |
-| **GITHUB_ACTIONS_SETUP.md** | CI/CD pipeline configuration |
-| **SWAGGER_SETUP.md** | API documentation setup |
-| **QUICK_REFERENCE.md** | Quick command reference |
-| **API_DOCUMENTATION.md** | Endpoint specifications |
-| **TESTING_GUIDE.md** | Testing instructions |
+| Document                    | Purpose                                  |
+| --------------------------- | ---------------------------------------- |
+| **SETUP_CHECKLIST.md**      | ⭐ Start here - Complete setup checklist |
+| **DEPLOYMENT_GUIDE.md**     | Full server deployment instructions      |
+| **GITHUB_ACTIONS_SETUP.md** | CI/CD pipeline configuration             |
+| **SWAGGER_SETUP.md**        | API documentation setup                  |
+| **QUICK_REFERENCE.md**      | Quick command reference                  |
+| **API_DOCUMENTATION.md**    | Endpoint specifications                  |
+| **TESTING_GUIDE.md**        | Testing instructions                     |
 
 ## 🔧 Project Structure
 
@@ -165,11 +171,13 @@ curl -X POST https://andrepangestu.com/api/auth/guest \
 ## 🌐 Your API Endpoints
 
 ### Base URL
+
 ```
 https://andrepangestu.com/api
 ```
 
 ### Swagger Documentation
+
 ```
 https://andrepangestu.com/api/documentation
 ```
@@ -177,28 +185,31 @@ https://andrepangestu.com/api/documentation
 ### Available Endpoints
 
 **Authentication:**
-- `POST /api/auth/guest` - Register guest user
+
+-   `POST /api/auth/guest` - Register guest user
 
 **People:**
-- `GET /api/people/recommended` - Get recommended people
-- `GET /api/people` - Get all people
-- `GET /api/people/{id}` - Get specific person
-- `POST /api/people/{id}/like` - Like a person
-- `POST /api/people/{id}/dislike` - Dislike a person
+
+-   `GET /api/people/recommended` - Get recommended people
+-   `GET /api/people` - Get all people
+-   `GET /api/people/{id}` - Get specific person
+-   `POST /api/people/{id}/like` - Like a person
+-   `POST /api/people/{id}/dislike` - Dislike a person
 
 **Utility:**
-- `GET /api/test` - Test endpoint
+
+-   `GET /api/test` - Test endpoint
 
 ## 🔐 Security Checklist
 
-- [ ] Strong database passwords set
-- [ ] SSL certificate installed
-- [ ] Firewall configured (UFW)
-- [ ] SSH key authentication enabled
-- [ ] GitHub secrets properly configured
-- [ ] `.env` file not in version control
-- [ ] APP_DEBUG=false in production
-- [ ] Regular backups scheduled
+-   [ ] Strong database passwords set
+-   [ ] SSL certificate installed
+-   [ ] Firewall configured (UFW)
+-   [ ] SSH key authentication enabled
+-   [ ] GitHub secrets properly configured
+-   [ ] `.env` file not in version control
+-   [ ] APP_DEBUG=false in production
+-   [ ] Regular backups scheduled
 
 ## 📊 What Happens When You Deploy
 
@@ -215,6 +226,7 @@ https://andrepangestu.com/api/documentation
 ## 🛠️ Common Commands
 
 ### On Your Local Machine
+
 ```powershell
 # Run tests
 php artisan test
@@ -233,6 +245,7 @@ git push origin main
 ```
 
 ### On Your Server
+
 ```bash
 # SSH into server
 ssh root@206.189.84.142
@@ -258,45 +271,50 @@ docker compose exec app php artisan l5-swagger:generate
 ### If Something Goes Wrong:
 
 1. **Check GitHub Actions**
-   - Go to your repo → Actions tab
-   - Review logs for errors
+
+    - Go to your repo → Actions tab
+    - Review logs for errors
 
 2. **Check Server Logs**
-   ```bash
-   docker compose logs -f
-   ```
+
+    ```bash
+    docker compose logs -f
+    ```
 
 3. **Verify Containers Running**
-   ```bash
-   docker compose ps
-   ```
+
+    ```bash
+    docker compose ps
+    ```
 
 4. **Check Documentation**
-   - Review relevant documentation file
-   - Follow troubleshooting sections
+
+    - Review relevant documentation file
+    - Follow troubleshooting sections
 
 5. **Common Issues**
-   - Permission errors → Check file permissions
-   - Database errors → Verify credentials
-   - 502 errors → Check if containers are running
-   - SSL errors → Run `certbot renew`
+    - Permission errors → Check file permissions
+    - Database errors → Verify credentials
+    - 502 errors → Check if containers are running
+    - SSL errors → Run `certbot renew`
 
 ## 🎊 Congratulations!
 
 You now have:
-- ✅ A fully containerized Laravel API
-- ✅ Automated CI/CD pipeline
-- ✅ Interactive API documentation
-- ✅ Production-ready deployment
-- ✅ Comprehensive documentation
+
+-   ✅ A fully containerized Laravel API
+-   ✅ Automated CI/CD pipeline
+-   ✅ Interactive API documentation
+-   ✅ Production-ready deployment
+-   ✅ Comprehensive documentation
 
 ## 📞 Support Resources
 
-- **Laravel Docs**: https://laravel.com/docs
-- **Docker Docs**: https://docs.docker.com
-- **Swagger Docs**: https://swagger.io/docs
-- **GitHub Actions**: https://docs.github.com/actions
-- **DigitalOcean**: https://docs.digitalocean.com
+-   **Laravel Docs**: https://laravel.com/docs
+-   **Docker Docs**: https://docs.docker.com
+-   **Swagger Docs**: https://swagger.io/docs
+-   **GitHub Actions**: https://docs.github.com/actions
+-   **DigitalOcean**: https://docs.digitalocean.com
 
 ---
 
@@ -307,8 +325,9 @@ You now have:
 Follow the checklist step by step, and you'll have your API live on DigitalOcean with automatic deployments!
 
 **Your Live URLs (after deployment):**
-- 🌐 API: https://andrepangestu.com/api
-- 📚 Docs: https://andrepangestu.com/api/documentation
+
+-   🌐 API: https://andrepangestu.com/api
+-   📚 Docs: https://andrepangestu.com/api/documentation
 
 ---
 

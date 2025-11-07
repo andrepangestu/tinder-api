@@ -333,16 +333,18 @@ Daily Operations
 ## 📚 Additional Resources
 
 For detailed instructions on any component, refer to:
-- **DEPLOYMENT_GUIDE.md** - Server setup
-- **GITHUB_ACTIONS_SETUP.md** - CI/CD configuration
-- **SWAGGER_SETUP.md** - API documentation
-- **QUICK_REFERENCE.md** - Command reference
+
+-   **DEPLOYMENT_GUIDE.md** - Server setup
+-   **GITHUB_ACTIONS_SETUP.md** - CI/CD configuration
+-   **SWAGGER_SETUP.md** - API documentation
+-   **QUICK_REFERENCE.md** - Command reference
 
 ---
 
 **This architecture provides:**
-- ✅ High availability
-- ✅ Easy scalability
-- ✅ Automated deployments
-- ✅ Secure by default
-- ✅ Easy to maintain
+
+-   ✅ High availability
+-   ✅ Easy scalability
+-   ✅ Automated deployments
+-   ✅ Secure by default
+-   ✅ Easy to maintain

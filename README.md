@@ -9,29 +9,29 @@ A modern, RESTful API built with Laravel for a Tinder-like dating application. F
 
 ## 🚀 Live Demo
 
-- **API Base URL**: [https://andrepangestu.com/api](https://andrepangestu.com/api)
-- **Swagger Documentation**: [https://andrepangestu.com/api/documentation](https://andrepangestu.com/api/documentation)
+-   **API Base URL**: [https://andrepangestu.com/api](https://andrepangestu.com/api)
+-   **Swagger Documentation**: [https://andrepangestu.com/api/documentation](https://andrepangestu.com/api/documentation)
 
 ## ✨ Features
 
-- 🎯 **People Recommendations** - Smart algorithm based on like ratio
-- 👍 **Like/Dislike System** - Swipe-like functionality
-- 👤 **Guest Authentication** - No signup required to start
-- 📖 **Swagger Documentation** - Interactive API documentation
-- 🐳 **Docker Support** - Containerized deployment
-- 🚀 **CI/CD Pipeline** - Automated deployment with GitHub Actions
-- 🔒 **SSL Enabled** - Secure HTTPS connections
-- ✅ **Full Test Coverage** - Comprehensive test suite
+-   🎯 **People Recommendations** - Smart algorithm based on like ratio
+-   👍 **Like/Dislike System** - Swipe-like functionality
+-   👤 **Guest Authentication** - No signup required to start
+-   📖 **Swagger Documentation** - Interactive API documentation
+-   🐳 **Docker Support** - Containerized deployment
+-   🚀 **CI/CD Pipeline** - Automated deployment with GitHub Actions
+-   🔒 **SSL Enabled** - Secure HTTPS connections
+-   ✅ **Full Test Coverage** - Comprehensive test suite
 
 ## 📋 Table of Contents
 
-- [Quick Start](#-quick-start)
-- [API Endpoints](#-api-endpoints)
-- [Deployment](#-deployment)
-- [Documentation](#-documentation)
-- [Testing](#-testing)
-- [Tech Stack](#-tech-stack)
-- [Contributing](#-contributing)
+-   [Quick Start](#-quick-start)
+-   [API Endpoints](#-api-endpoints)
+-   [Deployment](#-deployment)
+-   [Documentation](#-documentation)
+-   [Testing](#-testing)
+-   [Tech Stack](#-tech-stack)
+-   [Contributing](#-contributing)
 
 ## 🏃 Quick Start
 
@@ -82,11 +82,13 @@ open http://localhost:8080/api/test
 ## 🌐 API Endpoints
 
 ### Authentication
+
 ```bash
 POST   /api/auth/guest          # Register as guest user
 ```
 
 ### People
+
 ```bash
 GET    /api/people/recommended  # Get recommended people (sorted by like ratio)
 GET    /api/people              # Get all people (paginated)
@@ -113,9 +115,10 @@ curl -X POST https://andrepangestu.com/api/people/1/like \
 ## 🚀 Deployment
 
 ### Prerequisites
-- DigitalOcean droplet (Ubuntu 22.04 LTS)
-- Domain pointing to your server
-- GitHub repository
+
+-   DigitalOcean droplet (Ubuntu 22.04 LTS)
+-   Domain pointing to your server
+-   GitHub repository
 
 ### Quick Deploy
 
@@ -135,10 +138,10 @@ chmod +x setup.sh
 
 ## 📚 Documentation
 
-- **[API_DOCUMENTATION.md](API_DOCUMENTATION.md)** - Complete API reference
-- **[SWAGGER_SETUP.md](SWAGGER_SETUP.md)** - Swagger configuration guide
-- **[TESTING_GUIDE.md](TESTING_GUIDE.md)** - Testing documentation
-- **[Swagger UI](https://andrepangestu.com/api/documentation)** - Interactive API docs
+-   **[API_DOCUMENTATION.md](API_DOCUMENTATION.md)** - Complete API reference
+-   **[SWAGGER_SETUP.md](SWAGGER_SETUP.md)** - Swagger configuration guide
+-   **[TESTING_GUIDE.md](TESTING_GUIDE.md)** - Testing documentation
+-   **[Swagger UI](https://andrepangestu.com/api/documentation)** - Interactive API docs
 
 ## ✅ Testing
 
@@ -158,16 +161,16 @@ docker compose exec app php artisan test
 
 ## 🛠 Tech Stack
 
-- **Framework**: Laravel 12.x
-- **Language**: PHP 8.2
-- **Database**: MySQL 8.0 / SQLite (dev)
-- **Cache/Queue**: Redis
-- **Web Server**: Nginx
-- **Container**: Docker & Docker Compose
-- **CI/CD**: GitHub Actions
-- **API Docs**: L5-Swagger (OpenAPI 3.0)
-- **Testing**: PHPUnit
-- **Code Style**: Laravel Pint
+-   **Framework**: Laravel 12.x
+-   **Language**: PHP 8.2
+-   **Database**: MySQL 8.0 / SQLite (dev)
+-   **Cache/Queue**: Redis
+-   **Web Server**: Nginx
+-   **Container**: Docker & Docker Compose
+-   **CI/CD**: GitHub Actions
+-   **API Docs**: L5-Swagger (OpenAPI 3.0)
+-   **Testing**: PHPUnit
+-   **Code Style**: Laravel Pint
 
 ## 📁 Project Structure
 
@@ -230,20 +233,20 @@ This project is open-sourced software licensed under the [MIT license](https://o
 ## 👨‍💻 Author
 
 **Andre Pangestu**
-- Website: [andrepangestu.com](https://andrepangestu.com)
-- Email: hello@andrepangestu.com
+
+-   Website: [andrepangestu.com](https://andrepangestu.com)
+-   Email: hello@andrepangestu.com
 
 ## 🙏 Acknowledgments
 
-- Laravel Framework
-- L5-Swagger for API documentation
-- DigitalOcean for hosting
-- GitHub Actions for CI/CD
+-   Laravel Framework
+-   L5-Swagger for API documentation
+-   DigitalOcean for hosting
+-   GitHub Actions for CI/CD
 
 ---
 
 **Made with ❤️ using Laravel**
-
 
 In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
 

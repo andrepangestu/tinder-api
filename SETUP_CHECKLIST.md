@@ -4,11 +4,11 @@ Follow these steps in order to deploy your Tinder API to DigitalOcean with Docke
 
 ## ✅ Prerequisites Checklist
 
-- [ ] GitHub account with repository
-- [ ] DigitalOcean droplet (Ubuntu 22.04 LTS)
-- [ ] Domain `andrepangestu.com` pointing to `206.189.84.142`
-- [ ] SSH access to droplet
-- [ ] Local development environment with PHP, Composer, Git
+-   [ ] GitHub account with repository
+-   [ ] DigitalOcean droplet (Ubuntu 22.04 LTS)
+-   [ ] Domain `andrepangestu.com` pointing to `206.189.84.142`
+-   [ ] SSH access to droplet
+-   [ ] Local development environment with PHP, Composer, Git
 
 ---
 
@@ -83,10 +83,11 @@ The script will generate an SSH key. Copy it and:
 ### 4. Complete the Setup
 
 Follow the script prompts to:
-- Clone repository
-- Set database passwords
-- Configure Nginx
-- Setup SSL certificate
+
+-   Clone repository
+-   Set database passwords
+-   Configure Nginx
+-   Setup SSL certificate
 
 ---
 
@@ -121,16 +122,16 @@ Go to: GitHub Repository → Settings → Secrets and variables → Actions
 
 Add these secrets (click "New repository secret" for each):
 
-| Secret Name | How to Get Value |
-|-------------|------------------|
-| `SSH_PRIVATE_KEY` | `Get-Content github-actions-key` (entire content) |
-| `SERVER_HOST` | `206.189.84.142` |
-| `SERVER_USER` | `root` |
-| `APP_KEY` | `php artisan key:generate --show` |
-| `DB_DATABASE` | `tinder_api` |
-| `DB_USERNAME` | `tinder_user` |
-| `DB_PASSWORD` | Create a strong password |
-| `DB_ROOT_PASSWORD` | Create a different strong password |
+| Secret Name        | How to Get Value                                  |
+| ------------------ | ------------------------------------------------- |
+| `SSH_PRIVATE_KEY`  | `Get-Content github-actions-key` (entire content) |
+| `SERVER_HOST`      | `206.189.84.142`                                  |
+| `SERVER_USER`      | `root`                                            |
+| `APP_KEY`          | `php artisan key:generate --show`                 |
+| `DB_DATABASE`      | `tinder_api`                                      |
+| `DB_USERNAME`      | `tinder_user`                                     |
+| `DB_PASSWORD`      | Create a strong password                          |
+| `DB_ROOT_PASSWORD` | Create a different strong password                |
 
 ### 4. Update Server .env File
 
@@ -142,6 +143,7 @@ nano .env
 ```
 
 Make sure these match your GitHub Secrets:
+
 ```env
 APP_KEY=base64:...
 DB_DATABASE=tinder_api
@@ -215,10 +217,10 @@ You should see the interactive API documentation!
 
 ### ✅ Verify These URLs Work:
 
-- [ ] https://andrepangestu.com (Should show API)
-- [ ] https://andrepangestu.com/api/test (Should return JSON)
-- [ ] https://andrepangestu.com/api/documentation (Should show Swagger UI)
-- [ ] https://andrepangestu.com/api/people/recommended (Should return people)
+-   [ ] https://andrepangestu.com (Should show API)
+-   [ ] https://andrepangestu.com/api/test (Should return JSON)
+-   [ ] https://andrepangestu.com/api/documentation (Should show Swagger UI)
+-   [ ] https://andrepangestu.com/api/people/recommended (Should return people)
 
 ### ✅ Verify Docker Containers:
 
@@ -227,6 +229,7 @@ docker compose ps
 ```
 
 Expected output:
+
 ```
 NAME            STATUS    PORTS
 tinder-api      Up        0.0.0.0:8080->80/tcp
@@ -250,6 +253,7 @@ docker compose exec db mysql -u root -p
 ```
 
 Then:
+
 ```sql
 USE tinder_api;
 SHOW TABLES;
@@ -275,11 +279,11 @@ You've successfully deployed when:
 
 ## 📚 Documentation Reference
 
-- **Deployment Guide**: `DEPLOYMENT_GUIDE.md` - Complete server setup
-- **GitHub Actions Setup**: `GITHUB_ACTIONS_SETUP.md` - CI/CD configuration
-- **Swagger Setup**: `SWAGGER_SETUP.md` - API documentation
-- **API Documentation**: `API_DOCUMENTATION.md` - Endpoint details
-- **Testing Guide**: `TESTING_GUIDE.md` - Running tests
+-   **Deployment Guide**: `DEPLOYMENT_GUIDE.md` - Complete server setup
+-   **GitHub Actions Setup**: `GITHUB_ACTIONS_SETUP.md` - CI/CD configuration
+-   **Swagger Setup**: `SWAGGER_SETUP.md` - API documentation
+-   **API Documentation**: `API_DOCUMENTATION.md` - Endpoint details
+-   **Testing Guide**: `TESTING_GUIDE.md` - Running tests
 
 ---
 
@@ -288,41 +292,45 @@ You've successfully deployed when:
 ### If deployment fails:
 
 1. **Check GitHub Actions logs**
-   - Go to GitHub → Actions → Click failed workflow
-   - Read error messages
+
+    - Go to GitHub → Actions → Click failed workflow
+    - Read error messages
 
 2. **Check server logs**
-   ```bash
-   docker compose logs -f app
-   tail -f /var/log/nginx/error.log
-   ```
+
+    ```bash
+    docker compose logs -f app
+    tail -f /var/log/nginx/error.log
+    ```
 
 3. **Check Docker status**
-   ```bash
-   docker compose ps
-   docker compose logs -f
-   ```
+
+    ```bash
+    docker compose ps
+    docker compose logs -f
+    ```
 
 4. **Restart containers**
-   ```bash
-   docker compose down
-   docker compose up -d
-   ```
+
+    ```bash
+    docker compose down
+    docker compose up -d
+    ```
 
 5. **Check permissions**
-   ```bash
-   docker compose exec app chown -R www-data:www-data /var/www/storage
-   ```
+    ```bash
+    docker compose exec app chown -R www-data:www-data /var/www/storage
+    ```
 
 ### Common Issues:
 
-| Issue | Solution |
-|-------|----------|
-| "Permission denied (publickey)" | Check SSH keys in GitHub Secrets |
-| "Database connection refused" | Verify DB credentials in .env |
-| "502 Bad Gateway" | Check if containers are running: `docker compose ps` |
-| "Certificate error" | Run: `certbot renew` |
-| "Swagger 404" | Run: `docker compose exec app php artisan l5-swagger:generate` |
+| Issue                           | Solution                                                       |
+| ------------------------------- | -------------------------------------------------------------- |
+| "Permission denied (publickey)" | Check SSH keys in GitHub Secrets                               |
+| "Database connection refused"   | Verify DB credentials in .env                                  |
+| "502 Bad Gateway"               | Check if containers are running: `docker compose ps`           |
+| "Certificate error"             | Run: `certbot renew`                                           |
+| "Swagger 404"                   | Run: `docker compose exec app php artisan l5-swagger:generate` |
 
 ---
 
@@ -359,11 +367,12 @@ git push origin main
 ## 🎊 Congratulations!
 
 Your Tinder API is now:
-- ✅ Deployed to DigitalOcean
-- ✅ Running in Docker containers
-- ✅ Automated with CI/CD
-- ✅ Documented with Swagger
-- ✅ Secured with SSL
+
+-   ✅ Deployed to DigitalOcean
+-   ✅ Running in Docker containers
+-   ✅ Automated with CI/CD
+-   ✅ Documented with Swagger
+-   ✅ Secured with SSL
 
 **Your API is live at**: https://andrepangestu.com/api
 
