@@ -13,12 +13,12 @@ RUN apk add --no-cache \
     freetype-dev \
     oniguruma-dev \
     libxml2-dev \
-    nodejs \
-    npm
+    libzip-dev \
+    zlib-dev
 
 # Configure and install PHP extensions
-RUN docker-php-ext-configure gd --with-freetype --with-jpeg --with-webp \
-    && docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd
+RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
+    && docker-php-ext-install -j$(nproc) pdo_mysql mbstring exif pcntl bcmath gd zip
 
 # Install Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
@@ -31,7 +31,6 @@ COPY . .
 
 # Install dependencies
 RUN composer install --no-dev --optimize-autoloader --no-interaction
-RUN npm ci && npm run build
 
 # Production stage
 FROM php:8.2-fpm-alpine
@@ -39,17 +38,26 @@ FROM php:8.2-fpm-alpine
 # Install runtime dependencies
 RUN apk add --no-cache \
     libpng \
+    libpng-dev \
     libjpeg-turbo \
+    libjpeg-turbo-dev \
     libwebp \
+    libwebp-dev \
     freetype \
+    freetype-dev \
     oniguruma \
+    oniguruma-dev \
     libxml2 \
+    libxml2-dev \
+    libzip \
+    libzip-dev \
+    zlib-dev \
     nginx \
     supervisor
 
 # Configure and install PHP extensions
-RUN docker-php-ext-configure gd --with-freetype --with-jpeg --with-webp \
-    && docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd
+RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
+    && docker-php-ext-install -j$(nproc) pdo_mysql mbstring exif pcntl bcmath gd zip
 
 # Set working directory
 WORKDIR /var/www
@@ -77,6 +85,7 @@ RUN mkdir -p /var/www/storage/logs \
     && mkdir -p /var/www/storage/framework/sessions \
     && mkdir -p /var/www/storage/framework/views \
     && mkdir -p /var/www/storage/framework/cache \
+    && mkdir -p /var/log/supervisor \
     && chown -R www-data:www-data /var/www/storage
 
 # Expose port

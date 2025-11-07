@@ -48,7 +48,7 @@ services:
     networks:
       - tinder-network
     ports:
-      - "3306:3306"
+      - "3307:3306"
 
   redis:
     image: redis:7-alpine
