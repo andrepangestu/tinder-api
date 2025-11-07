@@ -57,10 +57,10 @@ class Person extends Model
     }
 
     /**
-     * Scope to get recommended people
+     * Scope to get recommended people (random order)
      */
     public function scopeRecommended($query)
     {
-        return $query->orderBy('created_at', 'desc');
+        return $query->inRandomOrder();
     }
 }

@@ -14,7 +14,7 @@ class PersonController extends Controller
      * @OA\Get(
      *     path="/people/recommended",
      *     summary="Get recommended people",
-     *     description="Get a paginated list of recommended people based on likes ratio",
+     *     description="Get a paginated list of recommended people in random order",
      *     operationId="getRecommendedPeople",
      *     tags={"People"},
      *     @OA\Parameter(

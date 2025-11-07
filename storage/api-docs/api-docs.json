@@ -379,7 +379,7 @@
                     "People"
                 ],
                 "summary": "Get recommended people",
-                "description": "Get a paginated list of recommended people based on likes ratio",
+                "description": "Get a paginated list of recommended people in random order",
                 "operationId": "getRecommendedPeople",
                 "parameters": [
                     {

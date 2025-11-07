@@ -14,12 +14,14 @@ http://127.0.0.1:8000/api
 
 **GET** `/people/recommended`
 
-Returns a paginated list of recommended people.
+Returns a paginated list of recommended people in **random order**. Each request will return a different random selection of people.
 
 **Query Parameters:**
 
 -   `per_page` (optional, integer): Number of items per page (default: 10, max: 50)
 -   `page` (optional, integer): Page number (default: 1)
+
+**Note:** The people are returned in random order, so each request may show different results even with the same pagination parameters.
 
 **Example Request:**
 
