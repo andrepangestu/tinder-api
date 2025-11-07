@@ -3,7 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PersonController;
-use App\Http\Controllers\AuthController;
+use App\Http\Controllers\PersonActivityController;
 
 /*
 |--------------------------------------------------------------------------
@@ -19,9 +19,6 @@ use App\Http\Controllers\AuthController;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
-
-// Auth routes
-Route::post('/auth/guest', [AuthController::class, 'registerGuest']);
 
 // Test route
 Route::get('/test', function () {
@@ -39,4 +36,9 @@ Route::prefix('people')->group(function () {
     Route::get('/{id}', [PersonController::class, 'show']);
     Route::post('/{id}/like', [PersonController::class, 'like']);
     Route::post('/{id}/dislike', [PersonController::class, 'dislike']);
+    
+    // Activity routes
+    Route::get('/activities/liked', [PersonActivityController::class, 'likedPeople']);
+    Route::get('/activities/disliked', [PersonActivityController::class, 'dislikedPeople']);
+    Route::get('/activities/all', [PersonActivityController::class, 'allActivities']);
 });

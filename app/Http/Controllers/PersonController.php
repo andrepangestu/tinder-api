@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Person;
+use App\Models\PersonActivity;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Auth;
 
 class PersonController extends Controller
 {
@@ -239,7 +241,16 @@ class PersonController extends Controller
             ], 404);
         }
 
-        $person->incrementLikes();
+        // Record activity
+        PersonActivity::create([
+            'user_id' => Auth::id(), // Will be null for guest users
+            'person_id' => $person->id,
+            'action_type' => 'like',
+            'action_at' => now(),
+        ]);
+
+        // Refresh person to get updated counts from accessor
+        $person->refresh();
 
         return response()->json([
             'status' => 'success',
@@ -304,7 +315,16 @@ class PersonController extends Controller
             ], 404);
         }
 
-        $person->incrementDislikes();
+        // Record activity
+        PersonActivity::create([
+            'user_id' => Auth::id(), // Will be null for guest users
+            'person_id' => $person->id,
+            'action_type' => 'dislike',
+            'action_at' => now(),
+        ]);
+
+        // Refresh person to get updated counts from accessor
+        $person->refresh();
 
         return response()->json([
             'status' => 'success',

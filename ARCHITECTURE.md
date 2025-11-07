@@ -341,6 +341,42 @@ For detailed instructions on any component, refer to:
 
 ---
 
+## Database Architecture Changes (Nov 7, 2025)
+
+### Dynamic Counter from Activities Table
+
+**Change:** Removed `likes_count` and `dislikes_count` columns from `people` table and implemented dynamic counting from `person_activities` table.
+
+#### Benefits:
+
+-   ✅ **Single source of truth** - Counter always accurate from activities
+-   ✅ **Better data integrity** - No risk of counter mismatch
+-   ✅ **More flexible** - Easy to add filters, undo features, etc.
+-   ✅ **Better normalized database**
+
+#### Implementation:
+
+**Person Model** uses Laravel Accessors:
+
+```php
+protected $appends = ['likes_count', 'dislikes_count'];
+
+protected function likesCount(): Attribute
+{
+    return Attribute::make(
+        get: fn () => $this->activities()->where('action_type', 'like')->count(),
+    );
+}
+```
+
+**Migration:** `2025_11_07_163153_remove_counter_columns_from_people_table.php`
+
+#### API Response (No Breaking Changes):
+
+All endpoints still return `likes_count` and `dislikes_count` - clients don't need updates!
+
+---
+
 **This architecture provides:**
 
 -   ✅ High availability
@@ -348,3 +384,4 @@ For detailed instructions on any component, refer to:
 -   ✅ Automated deployments
 -   ✅ Secure by default
 -   ✅ Easy to maintain
+-   ✅ Data integrity and consistency

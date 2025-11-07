@@ -20,17 +20,40 @@
         }
     ],
     "paths": {
-        "/auth/guest": {
-            "post": {
+        "/people/activities/liked": {
+            "get": {
                 "tags": [
-                    "Authentication"
+                    "People"
                 ],
-                "summary": "Register as guest user",
-                "description": "Create a new guest user and return an authentication token",
-                "operationId": "registerGuest",
+                "summary": "Get list of liked people",
+                "description": "Get a paginated list of people that have been liked",
+                "operationId": "getLikedPeople",
+                "parameters": [
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "description": "Number of items per page (max 50)",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 10,
+                            "maximum": 50
+                        }
+                    },
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "description": "Page number",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 1
+                        }
+                    }
+                ],
                 "responses": {
-                    "201": {
-                        "description": "Guest user created successfully",
+                    "200": {
+                        "description": "Successful operation",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -41,26 +64,302 @@
                                         },
                                         "message": {
                                             "type": "string",
-                                            "example": "Guest user created successfully"
+                                            "example": "Liked people retrieved successfully"
                                         },
                                         "data": {
-                                            "properties": {
-                                                "user": {
-                                                    "properties": {
-                                                        "id": {
-                                                            "type": "integer",
-                                                            "example": 1
-                                                        },
-                                                        "name": {
-                                                            "type": "string",
-                                                            "example": "Guest abc123"
-                                                        }
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "activity_id": {
+                                                        "type": "integer"
                                                     },
-                                                    "type": "object"
+                                                    "person_id": {
+                                                        "type": "integer"
+                                                    },
+                                                    "name": {
+                                                        "type": "string"
+                                                    },
+                                                    "age": {
+                                                        "type": "integer"
+                                                    },
+                                                    "gender": {
+                                                        "type": "string"
+                                                    },
+                                                    "location": {
+                                                        "type": "string"
+                                                    },
+                                                    "bio": {
+                                                        "type": "string"
+                                                    },
+                                                    "interests": {
+                                                        "type": "string"
+                                                    },
+                                                    "photo_url": {
+                                                        "type": "string"
+                                                    },
+                                                    "liked_at": {
+                                                        "type": "string",
+                                                        "format": "date-time"
+                                                    }
                                                 },
-                                                "token": {
-                                                    "type": "string",
-                                                    "example": "1|abcdefghijklmnopqrstuvwxyz..."
+                                                "type": "object"
+                                            }
+                                        },
+                                        "meta": {
+                                            "properties": {
+                                                "current_page": {
+                                                    "type": "integer"
+                                                },
+                                                "total": {
+                                                    "type": "integer"
+                                                },
+                                                "per_page": {
+                                                    "type": "integer"
+                                                },
+                                                "last_page": {
+                                                    "type": "integer"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/people/activities/disliked": {
+            "get": {
+                "tags": [
+                    "People"
+                ],
+                "summary": "Get list of disliked people",
+                "description": "Get a paginated list of people that have been disliked",
+                "operationId": "getDislikedPeople",
+                "parameters": [
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "description": "Number of items per page (max 50)",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 10,
+                            "maximum": 50
+                        }
+                    },
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "description": "Page number",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 1
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Disliked people retrieved successfully"
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "activity_id": {
+                                                        "type": "integer"
+                                                    },
+                                                    "person_id": {
+                                                        "type": "integer"
+                                                    },
+                                                    "name": {
+                                                        "type": "string"
+                                                    },
+                                                    "age": {
+                                                        "type": "integer"
+                                                    },
+                                                    "gender": {
+                                                        "type": "string"
+                                                    },
+                                                    "location": {
+                                                        "type": "string"
+                                                    },
+                                                    "bio": {
+                                                        "type": "string"
+                                                    },
+                                                    "interests": {
+                                                        "type": "string"
+                                                    },
+                                                    "photo_url": {
+                                                        "type": "string"
+                                                    },
+                                                    "disliked_at": {
+                                                        "type": "string",
+                                                        "format": "date-time"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        },
+                                        "meta": {
+                                            "properties": {
+                                                "current_page": {
+                                                    "type": "integer"
+                                                },
+                                                "total": {
+                                                    "type": "integer"
+                                                },
+                                                "per_page": {
+                                                    "type": "integer"
+                                                },
+                                                "last_page": {
+                                                    "type": "integer"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/people/activities/all": {
+            "get": {
+                "tags": [
+                    "People"
+                ],
+                "summary": "Get all activities",
+                "description": "Get a paginated list of all like and dislike activities",
+                "operationId": "getAllActivities",
+                "parameters": [
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "description": "Number of items per page (max 50)",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 10,
+                            "maximum": 50
+                        }
+                    },
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "description": "Page number",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 1
+                        }
+                    },
+                    {
+                        "name": "action_type",
+                        "in": "query",
+                        "description": "Filter by action type (like or dislike)",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "like",
+                                "dislike"
+                            ]
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Activities retrieved successfully"
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "activity_id": {
+                                                        "type": "integer"
+                                                    },
+                                                    "person_id": {
+                                                        "type": "integer"
+                                                    },
+                                                    "name": {
+                                                        "type": "string"
+                                                    },
+                                                    "age": {
+                                                        "type": "integer"
+                                                    },
+                                                    "gender": {
+                                                        "type": "string"
+                                                    },
+                                                    "location": {
+                                                        "type": "string"
+                                                    },
+                                                    "bio": {
+                                                        "type": "string"
+                                                    },
+                                                    "interests": {
+                                                        "type": "string"
+                                                    },
+                                                    "photo_url": {
+                                                        "type": "string"
+                                                    },
+                                                    "action_type": {
+                                                        "type": "string",
+                                                        "enum": [
+                                                            "like",
+                                                            "dislike"
+                                                        ]
+                                                    },
+                                                    "action_at": {
+                                                        "type": "string",
+                                                        "format": "date-time"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        },
+                                        "meta": {
+                                            "properties": {
+                                                "current_page": {
+                                                    "type": "integer"
+                                                },
+                                                "total": {
+                                                    "type": "integer"
+                                                },
+                                                "per_page": {
+                                                    "type": "integer"
+                                                },
+                                                "last_page": {
+                                                    "type": "integer"
                                                 }
                                             },
                                             "type": "object"
@@ -457,17 +756,13 @@
                         "type": "integer",
                         "example": 25
                     },
-                    "bio": {
+                    "image_url": {
                         "type": "string",
-                        "example": "I love hiking and photography"
-                    },
-                    "photo_url": {
-                        "type": "string",
-                        "example": "https://i.pravatar.cc/300?img=1"
+                        "example": "https://randomuser.me/api/portraits/women/1.jpg"
                     },
                     "location": {
                         "type": "string",
-                        "example": "New York"
+                        "example": "15 km"
                     },
                     "likes_count": {
                         "type": "integer",
@@ -543,10 +838,6 @@
         }
     },
     "tags": [
-        {
-            "name": "Authentication",
-            "description": "Authentication"
-        },
         {
             "name": "People",
             "description": "People"

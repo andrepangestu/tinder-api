@@ -10,54 +10,7 @@ http://127.0.0.1:8000/api
 
 ## Endpoints
 
-### 1. Register Guest User
-
-**POST** `/auth/guest`
-
-Creates a new guest user account with a random name and returns an API token for authentication.
-
-**Example Request:**
-
-```
-POST /api/auth/guest
-```
-
-**cURL Example:**
-
-```bash
-curl -X POST "http://127.0.0.1:8000/api/auth/guest" \
-  -H "Accept: application/json" \
-  -H "Content-Type: application/json"
-```
-
-**Example Response:**
-
-```json
-{
-    "status": "success",
-    "message": "Guest user created successfully",
-    "data": {
-        "user": {
-            "id": 1,
-            "name": "Guest a8f3k9x2"
-        },
-        "token": "1|laravel_sanctum_token_here"
-    }
-}
-```
-
-**Status Code:** `201 Created`
-
-**Notes:**
-
--   The guest user name is automatically generated as "Guest " plus a random 8-character string
--   Email and password are set to null for guest users
--   The returned token should be used for authenticated API requests
--   Include the token in the `Authorization: Bearer {token}` header for protected endpoints
-
----
-
-### 2. Get Recommended People
+### 1. Get Recommended People
 
 **GET** `/people/recommended`
 
@@ -116,7 +69,7 @@ curl -X GET "http://127.0.0.1:8000/api/people/recommended?per_page=5&page=1" \
 }
 ```
 
-### 3. Get All People
+### 2. Get All People
 
 **GET** `/people`
 
@@ -140,7 +93,7 @@ curl -X GET "http://127.0.0.1:8000/api/people?per_page=10&page=1" \
   -H "Accept: application/json"
 ```
 
-### 4. Get Person by ID
+### 3. Get Person by ID
 
 **GET** `/people/{id}`
 
@@ -183,7 +136,7 @@ curl -X GET "http://127.0.0.1:8000/api/people/1" \
 }
 ```
 
-### 5. Like Person
+### 4. Like Person
 
 **POST** `/people/{id}/like`
 
@@ -222,7 +175,7 @@ curl -X POST "http://127.0.0.1:8000/api/people/1/like" \
 }
 ```
 
-### 6. Dislike Person
+### 5. Dislike Person
 
 **POST** `/people/{id}/dislike`
 
@@ -261,7 +214,207 @@ curl -X POST "http://127.0.0.1:8000/api/people/1/dislike" \
 }
 ```
 
-### 7. Test Endpoint
+---
+
+### 6. Get Liked People Activities
+
+**GET** `/people/activities/liked`
+
+Returns a paginated list of people that have been liked, showing activity history.
+
+**Query Parameters:**
+
+-   `per_page` (optional, integer): Number of items per page (default: 10, max: 50)
+-   `page` (optional, integer): Page number (default: 1)
+
+**Example Request:**
+
+```
+GET /api/people/activities/liked?per_page=5&page=1
+```
+
+**cURL Example:**
+
+```bash
+curl -X GET "http://127.0.0.1:8000/api/people/activities/liked?per_page=5" \
+  -H "Accept: application/json"
+```
+
+**Example Response:**
+
+```json
+{
+    "status": "success",
+    "message": "Liked people retrieved successfully",
+    "data": [
+        {
+            "activity_id": 15,
+            "person_id": 3,
+            "name": "Emma Wilson",
+            "age": 27,
+            "gender": "female",
+            "location": "Los Angeles, CA",
+            "bio": "Artist and coffee enthusiast",
+            "interests": "Art, Coffee, Music",
+            "photo_url": "https://randomuser.me/api/portraits/women/3.jpg",
+            "liked_at": "2025-11-07T14:30:00+00:00"
+        },
+        {
+            "activity_id": 12,
+            "person_id": 1,
+            "name": "John Doe",
+            "age": 28,
+            "gender": "male",
+            "location": "New York, NY",
+            "bio": "Love hiking and photography",
+            "interests": "Hiking, Photography, Travel",
+            "photo_url": "https://randomuser.me/api/portraits/men/1.jpg",
+            "liked_at": "2025-11-07T14:15:00+00:00"
+        }
+    ],
+    "meta": {
+        "current_page": 1,
+        "total": 25,
+        "per_page": 5,
+        "last_page": 5
+    }
+}
+```
+
+**Status Code:** `200 OK`
+
+---
+
+### 7. Get Disliked People Activities
+
+**GET** `/people/activities/disliked`
+
+Returns a paginated list of people that have been disliked, showing activity history.
+
+**Query Parameters:**
+
+-   `per_page` (optional, integer): Number of items per page (default: 10, max: 50)
+-   `page` (optional, integer): Page number (default: 1)
+
+**Example Request:**
+
+```
+GET /api/people/activities/disliked?per_page=5&page=1
+```
+
+**cURL Example:**
+
+```bash
+curl -X GET "http://127.0.0.1:8000/api/people/activities/disliked?per_page=5" \
+  -H "Accept: application/json"
+```
+
+**Example Response:**
+
+```json
+{
+    "status": "success",
+    "message": "Disliked people retrieved successfully",
+    "data": [
+        {
+            "activity_id": 14,
+            "person_id": 5,
+            "name": "Mike Johnson",
+            "age": 32,
+            "gender": "male",
+            "location": "Chicago, IL",
+            "bio": "Tech enthusiast and gamer",
+            "interests": "Gaming, Technology, Movies",
+            "photo_url": "https://randomuser.me/api/portraits/men/5.jpg",
+            "disliked_at": "2025-11-07T14:25:00+00:00"
+        }
+    ],
+    "meta": {
+        "current_page": 1,
+        "total": 10,
+        "per_page": 5,
+        "last_page": 2
+    }
+}
+```
+
+**Status Code:** `200 OK`
+
+---
+
+### 8. Get All Activities
+
+**GET** `/people/activities/all`
+
+Returns a paginated list of all like and dislike activities with optional filtering.
+
+**Query Parameters:**
+
+-   `per_page` (optional, integer): Number of items per page (default: 10, max: 50)
+-   `page` (optional, integer): Page number (default: 1)
+-   `action_type` (optional, string): Filter by action type - "like" or "dislike"
+
+**Example Request:**
+
+```
+GET /api/people/activities/all?per_page=10&action_type=like
+```
+
+**cURL Example:**
+
+```bash
+curl -X GET "http://127.0.0.1:8000/api/people/activities/all?per_page=10&action_type=like" \
+  -H "Accept: application/json"
+```
+
+**Example Response:**
+
+```json
+{
+    "status": "success",
+    "message": "Activities retrieved successfully",
+    "data": [
+        {
+            "activity_id": 15,
+            "person_id": 3,
+            "name": "Emma Wilson",
+            "age": 27,
+            "gender": "female",
+            "location": "Los Angeles, CA",
+            "bio": "Artist and coffee enthusiast",
+            "interests": "Art, Coffee, Music",
+            "photo_url": "https://randomuser.me/api/portraits/women/3.jpg",
+            "action_type": "like",
+            "action_at": "2025-11-07T14:30:00+00:00"
+        },
+        {
+            "activity_id": 14,
+            "person_id": 5,
+            "name": "Mike Johnson",
+            "age": 32,
+            "gender": "male",
+            "location": "Chicago, IL",
+            "bio": "Tech enthusiast and gamer",
+            "interests": "Gaming, Technology, Movies",
+            "photo_url": "https://randomuser.me/api/portraits/men/5.jpg",
+            "action_type": "dislike",
+            "action_at": "2025-11-07T14:25:00+00:00"
+        }
+    ],
+    "meta": {
+        "current_page": 1,
+        "total": 35,
+        "per_page": 10,
+        "last_page": 4
+    }
+}
+```
+
+**Status Code:** `200 OK`
+
+---
+
+### 9. Test Endpoint
 
 **GET** `/test`
 
@@ -337,14 +490,6 @@ Pagination information includes:
 
 ### Quick Testing Commands
 
-**Register guest user:**
-
-```bash
-curl -X POST "http://127.0.0.1:8000/api/auth/guest" \
-  -H "Accept: application/json" \
-  -H "Content-Type: application/json"
-```
-
 **Get recommended people (default pagination):**
 
 ```bash
@@ -398,12 +543,6 @@ curl -X GET "http://127.0.0.1:8000/api/test" \
 
 ### PowerShell Examples (Windows)
 
-**Register guest user:**
-
-```powershell
-Invoke-RestMethod -Uri "http://127.0.0.1:8000/api/auth/guest" -Method POST -Headers @{"Accept"="application/json"}
-```
-
 **Get recommended people:**
 
 ```powershell
@@ -420,4 +559,22 @@ Invoke-RestMethod -Uri "http://127.0.0.1:8000/api/people/1/like" -Method POST -H
 
 ```powershell
 Invoke-RestMethod -Uri "http://127.0.0.1:8000/api/people/1/dislike" -Method POST -Headers @{"Accept"="application/json"}
+```
+
+**Get liked people activities:**
+
+```powershell
+Invoke-RestMethod -Uri "http://127.0.0.1:8000/api/people/activities/liked?per_page=10" -Method GET -Headers @{"Accept"="application/json"}
+```
+
+**Get disliked people activities:**
+
+```powershell
+Invoke-RestMethod -Uri "http://127.0.0.1:8000/api/people/activities/disliked?per_page=10" -Method GET -Headers @{"Accept"="application/json"}
+```
+
+**Get all activities:**
+
+```powershell
+Invoke-RestMethod -Uri "http://127.0.0.1:8000/api/people/activities/all?per_page=10&action_type=like" -Method GET -Headers @{"Accept"="application/json"}
 ```

@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 
 class Person extends Model
 {
@@ -15,18 +17,44 @@ class Person extends Model
         'name',
         'age',
         'location',
-        'bio',
         'image_url',
-        'interests',
-        'likes_count',
-        'dislikes_count'
     ];
 
     protected $casts = [
-        'interests' => 'array',
-        'likes_count' => 'integer',
-        'dislikes_count' => 'integer',
     ];
+
+    protected $appends = [
+        'likes_count',
+        'dislikes_count',
+    ];
+
+    /**
+     * Get all activities for this person
+     */
+    public function activities(): HasMany
+    {
+        return $this->hasMany(PersonActivity::class);
+    }
+
+    /**
+     * Get the likes count attribute
+     */
+    protected function likesCount(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => $this->activities()->where('action_type', 'like')->count(),
+        );
+    }
+
+    /**
+     * Get the dislikes count attribute
+     */
+    protected function dislikesCount(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => $this->activities()->where('action_type', 'dislike')->count(),
+        );
+    }
 
     /**
      * Scope to get recommended people
@@ -34,21 +62,5 @@ class Person extends Model
     public function scopeRecommended($query)
     {
         return $query->orderBy('created_at', 'desc');
-    }
-
-    /**
-     * Increment the likes count for this person
-     */
-    public function incrementLikes(): void
-    {
-        $this->increment('likes_count');
-    }
-
-    /**
-     * Increment the dislikes count for this person
-     */
-    public function incrementDislikes(): void
-    {
-        $this->increment('dislikes_count');
     }
 }

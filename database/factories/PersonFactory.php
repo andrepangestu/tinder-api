@@ -19,19 +19,14 @@ class PersonFactory extends Factory
      */
     public function definition(): array
     {
-        $interests = [
-            'Hiking', 'Photography', 'Cooking', 'Reading', 'Traveling', 
-            'Music', 'Dancing', 'Sports', 'Art', 'Movies', 'Gaming',
-            'Fitness', 'Yoga', 'Swimming', 'Running', 'Cycling'
-        ];
-
+        $randomId = $this->faker->numberBetween(1, 99);
+        $distance = $this->faker->numberBetween(1, 50);
+        
         return [
             'name' => $this->faker->name(),
             'age' => $this->faker->numberBetween(18, 45),
-            'location' => $this->faker->city() . ', ' . $this->faker->stateAbbr(),
-            'bio' => $this->faker->paragraph(2),
-            'image_url' => $this->faker->imageUrl(400, 600, 'people'),
-            'interests' => $this->faker->randomElements($interests, $this->faker->numberBetween(2, 5)),
+            'location' => "{$distance} km",
+            'image_url' => "https://randomuser.me/api/portraits/women/{$randomId}.jpg",
         ];
     }
 }
