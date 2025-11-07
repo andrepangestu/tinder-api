@@ -82,6 +82,20 @@ jobs:
             # Pull latest code
             git pull origin main || git pull origin master
             
+            # Check if docker compose v2 is installed, if not upgrade
+            if ! docker compose version &> /dev/null; then
+              echo "Upgrading to Docker Compose V2..."
+              apt-get update
+              apt-get install -y docker-compose-plugin
+            fi
+            
+            # Stop and remove old containers to avoid ContainerConfig error
+            echo "Stopping existing containers..."
+            docker compose down --remove-orphans || docker-compose down --remove-orphans || true
+            
+            # Remove old containers completely
+            docker container prune -f
+            
             # Create .env if it doesn't exist
             if [ ! -f .env ]; then
               cp .env.example .env
@@ -116,19 +130,19 @@ jobs:
               REBUILD=true
             fi
             
-            # Build and restart containers
+            # Build and restart containers using Docker Compose V2
             if [ "$REBUILD" = true ]; then
               echo "Rebuilding Docker images..."
-              docker-compose build --no-cache
-              docker-compose up -d --force-recreate
+              docker compose build --no-cache
+              docker compose up -d --force-recreate
             else
-              echo "No rebuild needed, using existing images..."
-              docker-compose up -d
+              echo "Starting containers..."
+              docker compose up -d
             fi
             
             # Wait for MySQL to be ready
             echo "Waiting for MySQL to be ready..."
-            until docker-compose exec -T db mysqladmin ping -h localhost -u root -p${{ secrets.DB_ROOT_PASSWORD }} --silent 2>/dev/null; do
+            until docker compose exec -T db mysqladmin ping -h localhost -u root -p${{ secrets.DB_ROOT_PASSWORD }} --silent 2>/dev/null; do
               echo "MySQL is unavailable - sleeping"
               sleep 2
             done
@@ -137,17 +151,23 @@ jobs:
             # Additional wait to ensure MySQL is fully initialized
             sleep 5
             
+            # Install/update composer dependencies
+            docker compose exec -T app composer install --no-dev --optimize-autoloader --no-interaction
+            
             # Run migrations
-            docker-compose exec -T app php artisan migrate --force
+            docker compose exec -T app php artisan migrate --force
             
             # Clear caches
-            docker-compose exec -T app php artisan config:clear
-            docker-compose exec -T app php artisan route:clear
-            docker-compose exec -T app php artisan view:clear
-            docker-compose exec -T app php artisan cache:clear
+            docker compose exec -T app php artisan config:clear
+            docker compose exec -T app php artisan route:clear
+            docker compose exec -T app php artisan view:clear
+            docker compose exec -T app php artisan cache:clear
+            
+            # Regenerate API docs
+            docker compose exec -T app php artisan l5-swagger:generate
             
             # Restart queue workers
-            docker-compose exec -T app php artisan queue:restart
+            docker compose exec -T app php artisan queue:restart
             
             echo "Deployment completed successfully!"
           EOF
