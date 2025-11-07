@@ -1,5 +1,5 @@
 # Build stage
-FROM php:8.2-fpm-alpine as build
+FROM php:8.2-fpm-alpine AS build
 
 # Install system dependencies
 RUN apk add --no-cache \
@@ -8,13 +8,17 @@ RUN apk add --no-cache \
     zip \
     unzip \
     libpng-dev \
+    libjpeg-turbo-dev \
+    libwebp-dev \
+    freetype-dev \
     oniguruma-dev \
     libxml2-dev \
     nodejs \
     npm
 
-# Install PHP extensions
-RUN docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd
+# Configure and install PHP extensions
+RUN docker-php-ext-configure gd --with-freetype --with-jpeg --with-webp \
+    && docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd
 
 # Install Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
@@ -35,13 +39,17 @@ FROM php:8.2-fpm-alpine
 # Install runtime dependencies
 RUN apk add --no-cache \
     libpng \
+    libjpeg-turbo \
+    libwebp \
+    freetype \
     oniguruma \
     libxml2 \
     nginx \
     supervisor
 
-# Install PHP extensions
-RUN docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd
+# Configure and install PHP extensions
+RUN docker-php-ext-configure gd --with-freetype --with-jpeg --with-webp \
+    && docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd
 
 # Set working directory
 WORKDIR /var/www
