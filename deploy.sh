@@ -44,6 +44,27 @@ $DOCKER_COMPOSE up -d
 echo -e "${YELLOW}⏳ Waiting for containers to restart...${NC}"
 sleep 10
 
+# Fix permissions
+echo -e "${GREEN}🔒 Fixing permissions...${NC}"
+$DOCKER_COMPOSE exec -T app chown -R www-data:www-data /var/www/storage /var/www/bootstrap/cache || true
+$DOCKER_COMPOSE exec -T app chmod -R 775 /var/www/storage /var/www/bootstrap/cache || true
+
+# Create necessary directories
+echo -e "${GREEN}📁 Creating necessary directories...${NC}"
+$DOCKER_COMPOSE exec -T app mkdir -p /var/www/storage/logs
+$DOCKER_COMPOSE exec -T app mkdir -p /var/www/storage/framework/sessions
+$DOCKER_COMPOSE exec -T app mkdir -p /var/www/storage/framework/views
+$DOCKER_COMPOSE exec -T app mkdir -p /var/www/storage/framework/cache
+$DOCKER_COMPOSE exec -T app mkdir -p /var/www/bootstrap/cache
+
+# Wait for MySQL to be ready
+echo -e "${YELLOW}⏳ Waiting for MySQL to be ready...${NC}"
+until $DOCKER_COMPOSE exec -T db mysqladmin ping -h localhost --silent 2>/dev/null; do
+  echo "Waiting for database connection..."
+  sleep 2
+done
+echo "MySQL is ready!"
+
 # Clear caches
 echo -e "${GREEN}🧹 Clearing application caches...${NC}"
 $DOCKER_COMPOSE exec -T app php artisan config:clear
@@ -64,6 +85,17 @@ echo -e "${GREEN}⚡ Optimizing application...${NC}"
 $DOCKER_COMPOSE exec -T app php artisan config:cache
 $DOCKER_COMPOSE exec -T app php artisan route:cache
 
+# Test if API is working
+echo -e "${GREEN}🧪 Testing API...${NC}"
+RESPONSE=$($DOCKER_COMPOSE exec -T app curl -s http://localhost/api/test || echo "failed")
+if [[ $RESPONSE == *"API is working"* ]]; then
+    echo -e "${GREEN}✅ API test passed!${NC}"
+else
+    echo -e "${YELLOW}⚠️  API test failed - checking logs...${NC}"
+    $DOCKER_COMPOSE logs --tail=20 app
+fi
+
 echo -e "${GREEN}✅ Deployment complete!${NC}"
 echo ""
 echo "Run '$DOCKER_COMPOSE logs -f app' to view application logs"
+echo "Test API: curl https://andrepangestu.com/api/test"
