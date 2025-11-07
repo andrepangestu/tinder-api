@@ -106,11 +106,25 @@ jobs:
             echo "QUEUE_CONNECTION=redis" >> .env
             echo "REDIS_HOST=redis" >> .env
             echo "REDIS_PORT=6379" >> .env
+            echo "" >> .env
+            echo "L5_SWAGGER_CONST_HOST=https://andrepangestu.com" >> .env
+            
+            # Check if we need to rebuild (Dockerfile or composer.json changed)
+            REBUILD=false
+            if git diff HEAD~1 HEAD --name-only | grep -q -E "Dockerfile|composer.json|composer.lock"; then
+              echo "Detected changes in Dockerfile or dependencies, rebuilding..."
+              REBUILD=true
+            fi
             
             # Build and restart containers
-            docker-compose down
-            docker-compose build --no-cache
-            docker-compose up -d
+            if [ "$REBUILD" = true ]; then
+              echo "Rebuilding Docker images..."
+              docker-compose build --no-cache
+              docker-compose up -d --force-recreate
+            else
+              echo "No rebuild needed, using existing images..."
+              docker-compose up -d
+            fi
             
             # Wait for MySQL to be ready
             echo "Waiting for MySQL to be ready..."
@@ -126,10 +140,11 @@ jobs:
             # Run migrations
             docker-compose exec -T app php artisan migrate --force
             
-            # Clear and cache config
-            docker-compose exec -T app php artisan config:cache
-            docker-compose exec -T app php artisan route:cache
-            docker-compose exec -T app php artisan view:cache
+            # Clear caches
+            docker-compose exec -T app php artisan config:clear
+            docker-compose exec -T app php artisan route:clear
+            docker-compose exec -T app php artisan view:clear
+            docker-compose exec -T app php artisan cache:clear
             
             # Restart queue workers
             docker-compose exec -T app php artisan queue:restart
