@@ -289,3 +289,39 @@ docker compose logs --tail=50 app
 docker compose exec app sed -i 's/APP_DEBUG=true/APP_DEBUG=false/' .env
 docker compose restart app
 ```
+
+---
+
+## 📱 MOBILE ACCESS TESTING
+
+```bash
+# Test CORS dari mobile origin
+curl -H "Origin: https://mobile-app.example.com" \
+     -H "User-Agent: Mozilla/5.0 (iPhone; CPU iPhone OS 14_0 like Mac OS X)" \
+     -I https://andrepangestu.com/api/test
+
+# Test dengan Android user agent
+curl -H "Origin: https://localhost" \
+     -H "User-Agent: Mozilla/5.0 (Linux; Android 10)" \
+     -I https://andrepangestu.com/api/test
+
+# Verify CORS headers muncul
+curl -k -H "Origin: https://example.com" \
+     -I https://andrepangestu.com/api/test | grep -i access-control
+
+# Test endpoint dari mobile
+curl -k https://andrepangestu.com/api/people/recommended
+
+# Test POST from mobile
+curl -X POST -k https://andrepangestu.com/api/people/1/like \
+     -H "Content-Type: application/json" \
+     -H "Origin: https://mobile-app.com"
+```
+
+**Expected CORS Headers:**
+```
+Access-Control-Allow-Origin: *
+Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS, PATCH
+Access-Control-Allow-Headers: *
+Access-Control-Expose-Headers: Authorization, Content-Type, X-Requested-With
+```
