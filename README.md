@@ -219,10 +219,11 @@ tests/
 ```
 
 **Test Coverage:**
-- ✅ 11 tests for cronjob email notifications
-- ✅ Feature tests for all API endpoints
-- ✅ Unit tests for business logic
-- ✅ Integration tests with database
+
+-   ✅ 11 tests for cronjob email notifications
+-   ✅ Feature tests for all API endpoints
+-   ✅ Unit tests for business logic
+-   ✅ Integration tests with database
 
 ## 🛠 Tech Stack
 
@@ -326,11 +327,12 @@ The application includes automated background tasks using Laravel's Task Schedul
 Automatically monitors and alerts administrators about viral profiles.
 
 **Features:**
-- ✅ Daily automated checks at 09:00 AM
-- ✅ Configurable like threshold (default: 50)
-- ✅ HTML email notifications with detailed reports
-- ✅ Customizable admin email recipients
-- ✅ Comprehensive test coverage
+
+-   ✅ Daily automated checks at 09:00 AM
+-   ✅ Configurable like threshold (default: 50)
+-   ✅ HTML email notifications with detailed reports
+-   ✅ Customizable admin email recipients
+-   ✅ Comprehensive test coverage
 
 **Command Usage:**
 
@@ -391,10 +393,11 @@ php artisan persons:check-popular
 **Email Content:**
 
 The notification includes:
-- Alert banner with detection summary
-- Total count of popular persons
-- Detailed table with person information (ID, Name, Age, Location, Likes)
-- Timestamp of the notification
+
+-   Alert banner with detection summary
+-   Total count of popular persons
+-   Detailed table with person information (ID, Name, Age, Location, Likes)
+-   Timestamp of the notification
 
 For detailed setup instructions, see [MAIL_SETUP.md](MAIL_SETUP.md).
 
