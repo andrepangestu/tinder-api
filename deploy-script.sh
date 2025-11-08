@@ -92,8 +92,23 @@ until docker compose exec -T db mysqladmin ping -h localhost -u root -p${DB_ROOT
 done
 echo "MySQL is ready!"
 
-# Additional wait to ensure MySQL is fully initialized
+# Wait for app container to be fully ready
+echo "Waiting for app container to be ready..."
+until docker compose exec -T app php -v > /dev/null 2>&1; do
+  echo "App container is not ready - sleeping"
+  sleep 2
+done
+echo "App container is ready!"
+
+# Additional wait to ensure all services are fully initialized
 sleep 5
+
+# Verify composer is available
+echo "Verifying composer installation..."
+docker compose exec -T app composer --version || {
+  echo "Error: Composer not found in container!"
+  exit 1
+}
 
 # Install/update composer dependencies
 docker compose exec -T app composer install --no-dev --optimize-autoloader --no-interaction
