@@ -78,111 +78,19 @@ jobs:
           MAIL_PASSWORD: ${{ secrets.MAIL_PASSWORD }}
           MAIL_FROM_ADDRESS: ${{ secrets.MAIL_FROM_ADDRESS }}
         run: |
-          ssh $SERVER_USER@$SERVER_HOST << 'EOF'
-            set -e
-            
-            # Navigate to project directory
-            cd /var/www/tinder-api
-            
-            # Pull latest code
-            git pull origin main || git pull origin master
-            
-            # Check if docker compose v2 is installed, if not upgrade
-            if ! docker compose version &> /dev/null; then
-              echo "Upgrading to Docker Compose V2..."
-              apt-get update
-              apt-get install -y docker-compose-plugin
-            fi
-            
-            # Stop and remove old containers to avoid ContainerConfig error
-            echo "Stopping existing containers..."
-            docker compose down --remove-orphans || docker-compose down --remove-orphans || true
-            
-            # Remove old containers completely
-            docker container prune -f
-            
-            # Create .env file with all environment variables
-            cat > .env << 'ENVFILE'
-APP_NAME="Tinder API"
-APP_ENV=production
-APP_DEBUG=false
-APP_KEY=${{ secrets.APP_KEY }}
-APP_URL=https://andrepangestu.com
-
-DB_CONNECTION=mysql
-DB_HOST=db
-DB_PORT=3306
-DB_DATABASE=${{ secrets.DB_DATABASE }}
-DB_USERNAME=${{ secrets.DB_USERNAME }}
-DB_PASSWORD=${{ secrets.DB_PASSWORD }}
-DB_ROOT_PASSWORD=${{ secrets.DB_ROOT_PASSWORD }}
-
-CACHE_DRIVER=redis
-SESSION_DRIVER=redis
-QUEUE_CONNECTION=redis
-REDIS_HOST=redis
-REDIS_PORT=6379
-
-MAIL_MAILER=smtp
-MAIL_HOST=${{ secrets.MAIL_HOST }}
-MAIL_PORT=${{ secrets.MAIL_PORT }}
-MAIL_USERNAME=${{ secrets.MAIL_USERNAME }}
-MAIL_PASSWORD=${{ secrets.MAIL_PASSWORD }}
-MAIL_ENCRYPTION=tls
-MAIL_FROM_ADDRESS=${{ secrets.MAIL_FROM_ADDRESS }}
-MAIL_FROM_NAME="Tinder API"
-
-L5_SWAGGER_CONST_HOST=https://andrepangestu.com
-ENVFILE
-            
-            # Check if we need to rebuild (Dockerfile or composer.json changed)
-            REBUILD=false
-            if git diff HEAD~1 HEAD --name-only | grep -q -E "Dockerfile|composer.json|composer.lock"; then
-              echo "Detected changes in Dockerfile or dependencies, rebuilding..."
-              REBUILD=true
-            fi
-            
-            # Build and restart containers using Docker Compose V2
-            if [ "$REBUILD" = true ]; then
-              echo "Rebuilding Docker images..."
-              docker compose build --no-cache
-              docker compose up -d --force-recreate
-            else
-              echo "Starting containers..."
-              docker compose up -d
-            fi
-            
-            # Wait for MySQL to be ready
-            echo "Waiting for MySQL to be ready..."
-            until docker compose exec -T db mysqladmin ping -h localhost -u root -p${{ secrets.DB_ROOT_PASSWORD }} --silent 2>/dev/null; do
-              echo "MySQL is unavailable - sleeping"
-              sleep 2
-            done
-            echo "MySQL is ready!"
-            
-            # Additional wait to ensure MySQL is fully initialized
-            sleep 5
-            
-            # Install/update composer dependencies
-            docker compose exec -T app composer install --no-dev --optimize-autoloader --no-interaction
-            
-            # Run migrations
-            docker compose exec -T app php artisan migrate --force
-            
-            # Clear caches
-            docker compose exec -T app php artisan config:clear
-            docker compose exec -T app php artisan route:clear
-            docker compose exec -T app php artisan view:clear
-            docker compose exec -T app php artisan cache:clear
-            
-            # Regenerate API docs
-            docker compose exec -T app php artisan l5-swagger:generate
-            
-            # Restart queue workers
-            docker compose exec -T app php artisan queue:restart
-            
-            echo "Deployment completed successfully!"
-          EOF
+          ssh $SERVER_USER@$SERVER_HOST "cd /var/www/tinder-api && \
+            git pull origin main && \
+            APP_KEY='$APP_KEY' \
+            DB_DATABASE='$DB_DATABASE' \
+            DB_USERNAME='$DB_USERNAME' \
+            DB_PASSWORD='$DB_PASSWORD' \
+            DB_ROOT_PASSWORD='$DB_ROOT_PASSWORD' \
+            MAIL_HOST='$MAIL_HOST' \
+            MAIL_PORT='$MAIL_PORT' \
+            MAIL_USERNAME='$MAIL_USERNAME' \
+            MAIL_PASSWORD='$MAIL_PASSWORD' \
+            MAIL_FROM_ADDRESS='$MAIL_FROM_ADDRESS' \
+            bash deploy-script.sh"
 
       - name: Notify deployment status
         if: always()
