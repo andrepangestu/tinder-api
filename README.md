@@ -14,15 +14,17 @@ A modern, RESTful API built with Laravel for a Tinder-like dating application. F
 
 ## ✨ Features
 
--   🎯 **People Recommendations** - Smart algorithm based on like ratio
--   👍 **Like/Dislike System** - Swipe-like functionality
--   👤 **Guest Authentication** - No signup required to start
--   � **Automated Notifications** - Daily cronjob to alert admins about popular persons (50+ likes)
--   �📖 **Swagger Documentation** - Interactive API documentation
--   🐳 **Docker Support** - Containerized deployment
--   🚀 **CI/CD Pipeline** - Automated deployment with GitHub Actions
--   🔒 **SSL Enabled** - Secure HTTPS connections
--   ✅ **Full Test Coverage** - Comprehensive test suite
+-   🎯 **People Recommendations** - Smart algorithm based on like ratio with random ordering
+-   👍 **Like/Dislike System** - Swipe-like functionality with activity tracking
+-   👤 **Guest Authentication** - Frictionless onboarding without signup requirements
+-   📧 **Automated Notifications** - Daily cronjob monitoring for viral profiles (50+ likes threshold)
+-   📊 **Activity Tracking** - Comprehensive user interaction history and analytics
+-   � **Swagger Documentation** - Interactive API documentation with OpenAPI 3.0
+-   🐳 **Docker Support** - Containerized deployment with Docker Compose
+-   🚀 **CI/CD Pipeline** - Automated testing and deployment via GitHub Actions
+-   🔒 **SSL Enabled** - Secure HTTPS connections with Let's Encrypt
+-   ✅ **Full Test Coverage** - Comprehensive test suite with PHPUnit (Feature & Unit tests)
+-   📬 **Email Integration** - SMTP support with Mailtrap for development and testing
 
 ## 📋 Table of Contents
 
@@ -98,6 +100,21 @@ POST   /api/people/{id}/like    # Like a person
 POST   /api/people/{id}/dislike # Dislike a person
 ```
 
+### Activities
+
+```bash
+GET    /api/people/activities/liked     # Get all liked people by current user
+GET    /api/people/activities/disliked  # Get all disliked people by current user
+GET    /api/people/activities/all       # Get all activities (with optional filters)
+```
+
+### Scheduled Commands
+
+```bash
+# Cronjob: Check for popular persons and send email notifications
+php artisan persons:check-popular [--threshold=50] [--admin-email=admin@tinderapi.com]
+```
+
 ### Example Usage
 
 ```bash
@@ -139,12 +156,35 @@ chmod +x setup.sh
 
 ## 📚 Documentation
 
--   **[API_DOCUMENTATION.md](API_DOCUMENTATION.md)** - Complete API reference
--   **[SWAGGER_SETUP.md](SWAGGER_SETUP.md)** - Swagger configuration guide
--   **[TESTING_GUIDE.md](TESTING_GUIDE.md)** - Testing documentation
--   **[Swagger UI](https://andrepangestu.com/api/documentation)** - Interactive API docs
+-   **[API_DOCUMENTATION.md](API_DOCUMENTATION.md)** - Complete API reference with request/response examples
+-   **[MAIL_SETUP.md](MAIL_SETUP.md)** - Email configuration guide for Mailtrap and production SMTP
+-   **[IMPLEMENTATION_SUMMARY.md](IMPLEMENTATION_SUMMARY.md)** - Cronjob implementation overview
+-   **[SWAGGER_TROUBLESHOOTING.md](SWAGGER_TROUBLESHOOTING.md)** - Swagger/API documentation troubleshooting guide
+-   **[SWAGGER_SETUP.md](SWAGGER_SETUP.md)** - Swagger/OpenAPI configuration guide
+-   **[TESTING_GUIDE.md](TESTING_GUIDE.md)** - Testing documentation and best practices
+-   **[Swagger UI](https://andrepangestu.com/api/documentation)** - Interactive API documentation
+
+### Quick Fixes
+
+**Swagger not working?** Run this on the server:
+
+```bash
+# Download and run the fix script
+curl -o fix-swagger.sh https://raw.githubusercontent.com/andrepangestu/tinder-api/main/fix-swagger.sh
+chmod +x fix-swagger.sh
+./fix-swagger.sh
+```
+
+Or manually:
+
+```bash
+docker compose exec -T app php artisan config:clear && \
+docker compose exec -T app php artisan l5-swagger:generate
+```
 
 ## ✅ Testing
+
+The project includes comprehensive test coverage for all features.
 
 ```bash
 # Run all tests
@@ -152,13 +192,37 @@ php artisan test
 
 # Run specific test suite
 php artisan test --testsuite=Feature
+php artisan test --testsuite=Unit
 
-# Run with coverage
+# Run specific test file
+php artisan test --filter=CheckPopularPersonsCommandTest
+
+# Run with coverage report
 php artisan test --coverage
 
-# In Docker
+# Run in Docker environment
 docker compose exec app php artisan test
 ```
+
+### Test Structure
+
+```
+tests/
+├── Feature/
+│   ├── CheckPopularPersonsCommandTest.php  # Cronjob command tests (7 tests)
+│   ├── LikeDislikeApiTest.php              # Like/Dislike API tests
+│   └── ...
+├── Unit/
+│   ├── PopularPersonNotificationTest.php   # Email notification tests (4 tests)
+│   └── ...
+└── TestCase.php
+```
+
+**Test Coverage:**
+- ✅ 11 tests for cronjob email notifications
+- ✅ Feature tests for all API endpoints
+- ✅ Unit tests for business logic
+- ✅ Integration tests with database
 
 ## 🛠 Tech Stack
 
@@ -178,23 +242,50 @@ docker compose exec app php artisan test
 ```
 tinder-api/
 ├── app/
-│   ├── Http/Controllers/      # API Controllers
-│   └── Models/                 # Eloquent Models
+│   ├── Console/
+│   │   └── Commands/
+│   │       └── CheckPopularPersons.php    # Cronjob command
+│   ├── Http/
+│   │   ├── Controllers/                   # API Controllers
+│   │   └── Middleware/                    # Custom middleware
+│   ├── Mail/
+│   │   └── PopularPersonNotification.php  # Email notification class
+│   └── Models/                            # Eloquent Models
+│       ├── Person.php
+│       ├── PersonActivity.php
+│       └── User.php
+├── bootstrap/
+│   └── app.php                            # Application bootstrap (includes scheduler)
 ├── database/
-│   ├── factories/              # Model Factories
-│   ├── migrations/             # Database Migrations
-│   └── seeders/                # Database Seeders
-├── docker/                     # Docker configurations
-│   ├── nginx/                  # Nginx configs
-│   ├── php/                    # PHP-FPM configs
-│   └── supervisor/             # Supervisor configs
+│   ├── factories/                         # Model Factories
+│   ├── migrations/                        # Database Migrations
+│   └── seeders/                           # Database Seeders
+│       └── PopularPersonSeeder.php        # Seeder for testing cronjob
+├── docker/                                # Docker configurations
+│   ├── nginx/                             # Nginx configs
+│   ├── php/                               # PHP-FPM configs
+│   └── supervisor/                        # Supervisor configs
+├── resources/
+│   └── views/
+│       └── emails/
+│           └── popular-person-notification.blade.php  # Email template
 ├── routes/
-│   └── api.php                 # API Routes
-├── tests/                      # Test Suite
-├── .github/workflows/          # GitHub Actions
-├── docker-compose.yml          # Docker Compose config
-├── Dockerfile                  # Docker image definition
+│   ├── api.php                            # API Routes
+│   └── console.php                        # Console routes
+├── tests/                                 # Test Suite
+│   ├── Feature/
+│   │   └── CheckPopularPersonsCommandTest.php
+│   └── Unit/
+│       └── PopularPersonNotificationTest.php
+├── .github/
+│   └── workflows/
+│       └── deploy.yml                     # GitHub Actions CI/CD
+├── docker-compose.yml                     # Docker Compose config
+├── Dockerfile                             # Docker image definition
 └── Documentation files
+    ├── API_DOCUMENTATION.md
+    ├── MAIL_SETUP.md
+    └── IMPLEMENTATION_SUMMARY.md
 ```
 
 ## 🔐 Environment Variables
@@ -228,34 +319,86 @@ MAIL_FROM_ADDRESS=noreply@tinderapi.com
 
 ## 📅 Scheduled Tasks
 
-### Popular Persons Notification
+The application includes automated background tasks using Laravel's Task Scheduler.
 
-The application automatically monitors popular persons and sends daily email notifications to administrators.
+### Popular Persons Notification System
 
-**Setup the scheduler:**
+Automatically monitors and alerts administrators about viral profiles.
 
-Add this cron entry to your server:
+**Features:**
+- ✅ Daily automated checks at 09:00 AM
+- ✅ Configurable like threshold (default: 50)
+- ✅ HTML email notifications with detailed reports
+- ✅ Customizable admin email recipients
+- ✅ Comprehensive test coverage
+
+**Command Usage:**
 
 ```bash
-* * * * * cd /path-to-your-project && php artisan schedule:run >> /dev/null 2>&1
-```
-
-**Manual execution:**
-
-```bash
-# Run with default settings (50+ likes)
+# Run with default settings (threshold: 50, admin: admin@tinderapi.com)
 php artisan persons:check-popular
 
-# Custom threshold
+# Custom threshold (e.g., alert for 30+ likes)
 php artisan persons:check-popular --threshold=30
 
 # Custom admin email
 php artisan persons:check-popular --admin-email=admin@example.com
+
+# Combine options
+php artisan persons:check-popular --threshold=100 --admin-email=custom@example.com
 ```
 
-**Schedule:** Daily at 09:00 AM
+**Server Setup:**
 
-For more details, see the [API Documentation](API_DOCUMENTATION.md#scheduled-tasks-cronjobs).
+Add the following cron entry to enable Laravel's scheduler:
+
+```bash
+# For Docker deployment
+* * * * * cd /var/www/tinder-api && docker compose exec -T app php artisan schedule:run >> /dev/null 2>&1
+
+# For standard deployment
+* * * * * cd /var/www/tinder-api && php artisan schedule:run >> /dev/null 2>&1
+```
+
+**Email Configuration:**
+
+Configure SMTP settings in `.env`:
+
+```env
+MAIL_MAILER=smtp
+MAIL_HOST=sandbox.smtp.mailtrap.io    # Use Mailtrap for testing
+MAIL_PORT=2525
+MAIL_USERNAME=your_mailtrap_username
+MAIL_PASSWORD=your_mailtrap_password
+MAIL_ENCRYPTION=tls
+MAIL_FROM_ADDRESS=noreply@tinderapi.com
+MAIL_FROM_NAME="${APP_NAME}"
+```
+
+**Testing:**
+
+```bash
+# Seed test data (creates persons with 50+ likes)
+php artisan db:seed --class=PopularPersonSeeder
+
+# Run the command manually
+php artisan persons:check-popular
+
+# Check email in Mailtrap inbox
+# Login to https://mailtrap.io to view sent emails
+```
+
+**Email Content:**
+
+The notification includes:
+- Alert banner with detection summary
+- Total count of popular persons
+- Detailed table with person information (ID, Name, Age, Location, Likes)
+- Timestamp of the notification
+
+For detailed setup instructions, see [MAIL_SETUP.md](MAIL_SETUP.md).
+
+For complete cronjob documentation, see [API_DOCUMENTATION.md#scheduled-tasks](API_DOCUMENTATION.md#scheduled-tasks-cronjobs).
 
 ## 🤝 Contributing
 
