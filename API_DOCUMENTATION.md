@@ -580,3 +580,121 @@ Invoke-RestMethod -Uri "http://127.0.0.1:8000/api/people/activities/disliked?per
 ```powershell
 Invoke-RestMethod -Uri "http://127.0.0.1:8000/api/people/activities/all?per_page=10&action_type=like" -Method GET -Headers @{"Accept"="application/json"}
 ```
+
+---
+
+## Scheduled Tasks (Cronjobs)
+
+### Popular Persons Notification
+
+The application includes an automated cronjob that monitors popular persons and sends email notifications to administrators.
+
+**Command:**
+
+```bash
+php artisan persons:check-popular
+```
+
+**Schedule:** Daily at 09:00 AM
+
+**Description:**
+
+This command checks for persons who have received more than 50 likes and sends an email notification to the admin with details about these popular persons.
+
+**Options:**
+
+-   `--threshold=50` (optional): The minimum number of likes to be considered popular (default: 50)
+-   `--admin-email=admin@tinderapi.com` (optional): The admin email address to receive notifications (default: admin@tinderapi.com)
+
+**Manual Execution Examples:**
+
+```bash
+# Check with default threshold (50 likes)
+php artisan persons:check-popular
+
+# Check with custom threshold
+php artisan persons:check-popular --threshold=30
+
+# Send to a custom admin email
+php artisan persons:check-popular --admin-email=custom@example.com
+
+# Combine options
+php artisan persons:check-popular --threshold=100 --admin-email=admin@example.com
+```
+
+**PowerShell Examples:**
+
+```powershell
+# Check with default threshold
+php artisan persons:check-popular
+
+# Check with custom threshold
+php artisan persons:check-popular --threshold=30
+
+# Send to a custom admin email
+php artisan persons:check-popular --admin-email=custom@example.com
+```
+
+**Output Example:**
+
+```
+Checking for persons with more than 50 likes...
+Found 2 popular person(s).
+
++----+---------------+-----+-----------+-------+
+| ID | Name          | Age | Location  | Likes |
++----+---------------+-----+-----------+-------+
+| 5  | Jane Smith    | 27  | Jakarta   | 78    |
+| 12 | Mike Johnson  | 30  | Bandung   | 65    |
++----+---------------+-----+-----------+-------+
+
+Email notification sent to admin@tinderapi.com
+Popular persons check completed successfully.
+```
+
+**Email Notification:**
+
+The admin will receive an HTML email with:
+
+-   Alert banner indicating popular persons detected
+-   Total count of popular persons
+-   Detailed table showing:
+    -   Person ID
+    -   Name
+    -   Age
+    -   Location
+    -   Total likes count
+-   Timestamp of the notification
+
+**Setting Up the Cronjob:**
+
+The command is already scheduled in `bootstrap/app.php` to run daily at 09:00 AM. To enable the scheduler, you need to add a single cron entry to your server:
+
+```bash
+* * * * * cd /path-to-your-project && php artisan schedule:run >> /dev/null 2>&1
+```
+
+For development/testing, you can manually trigger the scheduler:
+
+```bash
+php artisan schedule:run
+```
+
+Or run the command directly as shown in the manual execution examples above.
+
+**Mail Configuration:**
+
+Make sure your `.env` file has proper mail configuration:
+
+```env
+MAIL_MAILER=smtp
+MAIL_HOST=your-smtp-host
+MAIL_PORT=587
+MAIL_USERNAME=your-username
+MAIL_PASSWORD=your-password
+MAIL_ENCRYPTION=tls
+MAIL_FROM_ADDRESS=noreply@tinderapi.com
+MAIL_FROM_NAME="${APP_NAME}"
+```
+
+For testing purposes, you can use `MAIL_MAILER=log` to log emails to `storage/logs/laravel.log` instead of sending actual emails.

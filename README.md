@@ -17,7 +17,8 @@ A modern, RESTful API built with Laravel for a Tinder-like dating application. F
 -   🎯 **People Recommendations** - Smart algorithm based on like ratio
 -   👍 **Like/Dislike System** - Swipe-like functionality
 -   👤 **Guest Authentication** - No signup required to start
--   📖 **Swagger Documentation** - Interactive API documentation
+-   � **Automated Notifications** - Daily cronjob to alert admins about popular persons (50+ likes)
+-   �📖 **Swagger Documentation** - Interactive API documentation
 -   🐳 **Docker Support** - Containerized deployment
 -   🚀 **CI/CD Pipeline** - Automated deployment with GitHub Actions
 -   🔒 **SSL Enabled** - Secure HTTPS connections
@@ -214,7 +215,47 @@ DB_PASSWORD=your_secure_password
 CACHE_DRIVER=redis
 SESSION_DRIVER=redis
 QUEUE_CONNECTION=redis
+
+# Mail Configuration for Notifications
+MAIL_MAILER=smtp
+MAIL_HOST=your-smtp-host
+MAIL_PORT=587
+MAIL_USERNAME=your-username
+MAIL_PASSWORD=your-password
+MAIL_ENCRYPTION=tls
+MAIL_FROM_ADDRESS=noreply@tinderapi.com
 ```
+
+## 📅 Scheduled Tasks
+
+### Popular Persons Notification
+
+The application automatically monitors popular persons and sends daily email notifications to administrators.
+
+**Setup the scheduler:**
+
+Add this cron entry to your server:
+
+```bash
+* * * * * cd /path-to-your-project && php artisan schedule:run >> /dev/null 2>&1
+```
+
+**Manual execution:**
+
+```bash
+# Run with default settings (50+ likes)
+php artisan persons:check-popular
+
+# Custom threshold
+php artisan persons:check-popular --threshold=30
+
+# Custom admin email
+php artisan persons:check-popular --admin-email=admin@example.com
+```
+
+**Schedule:** Daily at 09:00 AM
+
+For more details, see the [API Documentation](API_DOCUMENTATION.md#scheduled-tasks-cronjobs).
 
 ## 🤝 Contributing
 
