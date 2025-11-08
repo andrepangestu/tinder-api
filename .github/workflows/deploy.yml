@@ -64,98 +64,80 @@ jobs:
           ssh-keyscan -H ${{ secrets.SERVER_HOST }} >> ~/.ssh/known_hosts
 
       - name: Deploy to server
-        env:
-          SERVER_HOST: ${{ secrets.SERVER_HOST }}
-          SERVER_USER: ${{ secrets.SERVER_USER }}
-          APP_KEY: ${{ secrets.APP_KEY }}
-          DB_DATABASE: ${{ secrets.DB_DATABASE }}
-          DB_USERNAME: ${{ secrets.DB_USERNAME }}
-          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
-          DB_ROOT_PASSWORD: ${{ secrets.DB_ROOT_PASSWORD }}
-          MAIL_HOST: ${{ secrets.MAIL_HOST }}
-          MAIL_PORT: ${{ secrets.MAIL_PORT }}
-          MAIL_USERNAME: ${{ secrets.MAIL_USERNAME }}
-          MAIL_PASSWORD: ${{ secrets.MAIL_PASSWORD }}
-          MAIL_FROM_ADDRESS: ${{ secrets.MAIL_FROM_ADDRESS }}
         run: |
-          ssh $SERVER_USER@$SERVER_HOST << 'ENDSSH'
-            set -e
-            cd /var/www/tinder-api
-            
-            # Pull latest code
-            git pull origin main
-            
-            # Create .env file
-            cat > .env << EOF
-APP_NAME="Tinder API"
-APP_ENV=production
-APP_DEBUG=false
-APP_KEY=${{ secrets.APP_KEY }}
-APP_URL=https://andrepangestu.com
+          ssh ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} bash << 'ENDSSH'
+          set -e
+          cd /var/www/tinder-api
 
-DB_CONNECTION=mysql
-DB_HOST=db
-DB_PORT=3306
-DB_DATABASE=${{ secrets.DB_DATABASE }}
-DB_USERNAME=${{ secrets.DB_USERNAME }}
-DB_PASSWORD=${{ secrets.DB_PASSWORD }}
-DB_ROOT_PASSWORD=${{ secrets.DB_ROOT_PASSWORD }}
+          echo "Pulling latest code..."
+          git pull origin main
 
-CACHE_DRIVER=redis
-SESSION_DRIVER=redis
-QUEUE_CONNECTION=redis
-REDIS_HOST=redis
-REDIS_PORT=6379
+          echo "Creating .env file..."
+          cat > .env << 'ENVEOF'
+          APP_NAME="Tinder API"
+          APP_ENV=production
+          APP_DEBUG=false
+          APP_KEY=${{ secrets.APP_KEY }}
+          APP_URL=https://andrepangestu.com
 
-MAIL_MAILER=smtp
-MAIL_HOST=${{ secrets.MAIL_HOST }}
-MAIL_PORT=${{ secrets.MAIL_PORT }}
-MAIL_USERNAME=${{ secrets.MAIL_USERNAME }}
-MAIL_PASSWORD=${{ secrets.MAIL_PASSWORD }}
-MAIL_ENCRYPTION=tls
-MAIL_FROM_ADDRESS=${{ secrets.MAIL_FROM_ADDRESS }}
-MAIL_FROM_NAME="Tinder API"
+          DB_CONNECTION=mysql
+          DB_HOST=db
+          DB_PORT=3306
+          DB_DATABASE=${{ secrets.DB_DATABASE }}
+          DB_USERNAME=${{ secrets.DB_USERNAME }}
+          DB_PASSWORD=${{ secrets.DB_PASSWORD }}
+          DB_ROOT_PASSWORD=${{ secrets.DB_ROOT_PASSWORD }}
 
-L5_SWAGGER_CONST_HOST=https://andrepangestu.com
-EOF
+          CACHE_DRIVER=redis
+          SESSION_DRIVER=redis
+          QUEUE_CONNECTION=redis
+          REDIS_HOST=redis
+          REDIS_PORT=6379
 
-            # Stop containers
-            docker compose down
-            
-            # Start containers
-            docker compose up -d
-            
-            # Wait for containers to be ready
-            echo "Waiting for containers to be ready..."
-            sleep 10
-            
-            # Wait for MySQL
-            until docker compose exec -T db mysqladmin ping -h localhost --silent 2>/dev/null; do
-              echo "Waiting for MySQL..."
-              sleep 2
-            done
-            
-            # Wait for app container
-            until docker compose exec -T app php -v > /dev/null 2>&1; do
-              echo "Waiting for app container..."
-              sleep 2
-            done
-            
-            # Install dependencies
-            docker compose exec -T app composer install --no-dev --optimize-autoloader --no-interaction
-            
-            # Run migrations
-            docker compose exec -T app php artisan migrate --force
-            
-            # Clear caches
-            docker compose exec -T app php artisan config:clear
-            docker compose exec -T app php artisan route:clear
-            docker compose exec -T app php artisan cache:clear
-            
-            # Regenerate Swagger
-            docker compose exec -T app php artisan l5-swagger:generate
-            
-            echo "✅ Deployment completed!"
+          MAIL_MAILER=smtp
+          MAIL_HOST=${{ secrets.MAIL_HOST }}
+          MAIL_PORT=${{ secrets.MAIL_PORT }}
+          MAIL_USERNAME=${{ secrets.MAIL_USERNAME }}
+          MAIL_PASSWORD=${{ secrets.MAIL_PASSWORD }}
+          MAIL_ENCRYPTION=tls
+          MAIL_FROM_ADDRESS=${{ secrets.MAIL_FROM_ADDRESS }}
+          MAIL_FROM_NAME="Tinder API"
+
+          L5_SWAGGER_CONST_HOST=https://andrepangestu.com
+          ENVEOF
+
+          echo "Restarting containers..."
+          docker compose down
+          docker compose up -d
+
+          echo "Waiting for containers..."
+          sleep 10
+
+          echo "Waiting for MySQL..."
+          until docker compose exec -T db mysqladmin ping -h localhost --silent 2>/dev/null; do
+            sleep 2
+          done
+
+          echo "Waiting for app..."
+          until docker compose exec -T app php -v > /dev/null 2>&1; do
+            sleep 2
+          done
+
+          echo "Installing dependencies..."
+          docker compose exec -T app composer install --no-dev --optimize-autoloader --no-interaction
+
+          echo "Running migrations..."
+          docker compose exec -T app php artisan migrate --force
+
+          echo "Clearing caches..."
+          docker compose exec -T app php artisan config:clear
+          docker compose exec -T app php artisan route:clear
+          docker compose exec -T app php artisan cache:clear
+
+          echo "Regenerating Swagger..."
+          docker compose exec -T app php artisan l5-swagger:generate
+
+          echo "✅ Deployment completed!"
           ENDSSH
 
       - name: Notify deployment status
