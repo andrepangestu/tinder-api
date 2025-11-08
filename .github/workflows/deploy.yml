@@ -101,41 +101,39 @@ jobs:
             # Remove old containers completely
             docker container prune -f
             
-            # Create .env if it doesn't exist
-            if [ ! -f .env ]; then
-              cp .env.example .env
-            fi
-            
-            # Update environment variables
-            echo "APP_ENV=production" > .env
-            echo "APP_DEBUG=false" >> .env
-            echo "APP_KEY=${{ secrets.APP_KEY }}" >> .env
-            echo "APP_URL=https://andrepangestu.com" >> .env
-            echo "" >> .env
-            echo "DB_CONNECTION=mysql" >> .env
-            echo "DB_HOST=db" >> .env
-            echo "DB_PORT=3306" >> .env
-            echo "DB_DATABASE=${{ secrets.DB_DATABASE }}" >> .env
-            echo "DB_USERNAME=${{ secrets.DB_USERNAME }}" >> .env
-            echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> .env
-            echo "DB_ROOT_PASSWORD=${{ secrets.DB_ROOT_PASSWORD }}" >> .env
-            echo "" >> .env
-            echo "CACHE_DRIVER=redis" >> .env
-            echo "SESSION_DRIVER=redis" >> .env
-            echo "QUEUE_CONNECTION=redis" >> .env
-            echo "REDIS_HOST=redis" >> .env
-            echo "REDIS_PORT=6379" >> .env
-            echo "" >> .env
-            echo "MAIL_MAILER=smtp" >> .env
-            echo "MAIL_HOST=${{ secrets.MAIL_HOST }}" >> .env
-            echo "MAIL_PORT=${{ secrets.MAIL_PORT }}" >> .env
-            echo "MAIL_USERNAME=${{ secrets.MAIL_USERNAME }}" >> .env
-            echo "MAIL_PASSWORD=${{ secrets.MAIL_PASSWORD }}" >> .env
-            echo "MAIL_ENCRYPTION=tls" >> .env
-            echo "MAIL_FROM_ADDRESS=${{ secrets.MAIL_FROM_ADDRESS }}" >> .env
-            echo "MAIL_FROM_NAME=Tinder API" >> .env
-            echo "" >> .env
-            echo "L5_SWAGGER_CONST_HOST=https://andrepangestu.com" >> .env
+            # Create .env file with all environment variables
+            cat > .env << 'ENVFILE'
+APP_NAME="Tinder API"
+APP_ENV=production
+APP_DEBUG=false
+APP_KEY=${{ secrets.APP_KEY }}
+APP_URL=https://andrepangestu.com
+
+DB_CONNECTION=mysql
+DB_HOST=db
+DB_PORT=3306
+DB_DATABASE=${{ secrets.DB_DATABASE }}
+DB_USERNAME=${{ secrets.DB_USERNAME }}
+DB_PASSWORD=${{ secrets.DB_PASSWORD }}
+DB_ROOT_PASSWORD=${{ secrets.DB_ROOT_PASSWORD }}
+
+CACHE_DRIVER=redis
+SESSION_DRIVER=redis
+QUEUE_CONNECTION=redis
+REDIS_HOST=redis
+REDIS_PORT=6379
+
+MAIL_MAILER=smtp
+MAIL_HOST=${{ secrets.MAIL_HOST }}
+MAIL_PORT=${{ secrets.MAIL_PORT }}
+MAIL_USERNAME=${{ secrets.MAIL_USERNAME }}
+MAIL_PASSWORD=${{ secrets.MAIL_PASSWORD }}
+MAIL_ENCRYPTION=tls
+MAIL_FROM_ADDRESS=${{ secrets.MAIL_FROM_ADDRESS }}
+MAIL_FROM_NAME="Tinder API"
+
+L5_SWAGGER_CONST_HOST=https://andrepangestu.com
+ENVFILE
             
             # Check if we need to rebuild (Dockerfile or composer.json changed)
             REBUILD=false
